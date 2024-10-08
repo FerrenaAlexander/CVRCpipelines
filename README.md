@@ -1,2 +1,2 @@
 # CVRCpipelines
-Code for high throughput sequencing data analysis
+Code for high throughput sequencing data analysis.
