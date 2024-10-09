@@ -508,7 +508,7 @@ deseq_to_gsea <- function(deseqres,
     if( any(is.na(gseares$NES)) ){
       rm(gseares)
       
-      gseares <- fgsea::fgsea(pathways=pwayl, stats=gl, nPermSimple=10000, nproc = 1)
+      gseares <- fgsea::fgsea(pathways=pwayl, stats=scores, nPermSimple=10000, nproc = 1)
       
       invisible(gc(full = T, reset = F, verbose = F))
       
