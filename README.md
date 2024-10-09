@@ -13,3 +13,4 @@ devtools::install_github("FerrenaAlexander/CVRCpipelines")
 ## Documentation
 
 will add gsea tutorial and public test dataset soon
+make sure to test seed setting and mention
