@@ -11,4 +11,16 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
 Depends: 
     R (>= 4.0)
+biocViews:
+    fgsea
+Imports: 
+    tidyverse,
+    dplyr,
+    stringr,
+    ggplot2,
+    aPEAR,
+    msigdbr,
+    foreach,
+    doParallel,
+    parallel
 LazyData: true
