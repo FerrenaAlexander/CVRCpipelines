@@ -6,8 +6,8 @@
 \usage{
 plot_apear_clusters(
   apearoutlist,
-  date_plots = T,
   outdir,
+  date_plots = T,
   repelLabels = T,
   fontSize = 2.7,
   pdfheight = 7,
@@ -18,9 +18,9 @@ plot_apear_clusters(
 \arguments{
 \item{apearoutlist}{the output of \code{gsea_to_aPEAR_clusters()}}
 
-\item{date_plots}{T/F, default T, whether to append datetime to apear graph plots, useful to remake plots in case they look weird (which is not uncommon)}
-
 \item{outdir}{string, path to output directory, will create a subdir called "aPEAR/aPEAR_GraphPlots"}
+
+\item{date_plots}{T/F, default T, whether to append datetime to apear graph plots, useful to remake plots in case they look weird (which is not uncommon)}
 
 \item{repelLabels}{T/F, default T, adjust labels to avoid overlaps, highly imperfect}
 

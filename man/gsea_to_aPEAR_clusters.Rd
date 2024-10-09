@@ -9,7 +9,6 @@ gsea_to_aPEAR_clusters(
   aPEAR_cluster_min_size = 3,
   min_pathway_gene_size = 3,
   num_input_sig_pathways_updn = 250,
-  line_char_width = 35,
   outdir
 )
 }

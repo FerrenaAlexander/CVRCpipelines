@@ -827,7 +827,6 @@ gsea_to_aPEAR_clusters <- function(gseareslist,
                                    aPEAR_cluster_min_size = 3,
                                    min_pathway_gene_size = 3,
                                    num_input_sig_pathways_updn = 250,
-                                   line_char_width = 35,
                                    outdir
                                    
                                    
@@ -1016,8 +1015,8 @@ gsea_to_aPEAR_clusters <- function(gseareslist,
 #' A wrapper for plotting the aPEAR enrichment network. Sometimes looks weird, so it may be useful to run this a few times, will produce a different plot each time.
 #'
 #' @param apearoutlist the output of `gsea_to_aPEAR_clusters()`
-#' @param date_plots T/F, default T, whether to append datetime to apear graph plots, useful to remake plots in case they look weird (which is not uncommon)
 #' @param outdir string, path to output directory, will create a subdir called "aPEAR/aPEAR_GraphPlots"
+#' @param date_plots T/F, default T, whether to append datetime to apear graph plots, useful to remake plots in case they look weird (which is not uncommon)
 #' @param repelLabels T/F, default T, adjust labels to avoid overlaps, highly imperfect
 #' @param fontSize numeric, default 2.7, cluster label font size
 #' @param pdfheight numeric, default 7
@@ -1029,8 +1028,8 @@ gsea_to_aPEAR_clusters <- function(gseareslist,
 #'
 #' @examples
 plot_apear_clusters <- function(apearoutlist,
-                                date_plots = T,
                                 outdir,
+                                date_plots = T,
                                 repelLabels = T,
                                 fontSize = 2.7,
                                 pdfheight = 7,
