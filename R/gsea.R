@@ -489,6 +489,9 @@ deseq_to_gsea <- function(deseqres,
     
     # gseareslist <- lapply(cats, function(type){
     
+    
+    set.seed(42069)
+    
     message(cat)
     
     
