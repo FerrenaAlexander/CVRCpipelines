@@ -2,6 +2,7 @@
 
 export(deseq_to_gsea)
 export(fix_underflow)
+export(gsea_apear_pipeline)
 export(gsea_to_aPEAR_clusters)
 export(gseares_dotplot)
 export(gseares_dotplot_listwrap)
