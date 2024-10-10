@@ -470,7 +470,7 @@ deseq_to_gsea <- function(deseqres,
   
   #loop over pwaycats and do GSEA
   # loop over pre-defined list of pathway categories, defined above
-  cat <- pwaycats[3] #for testing
+  cat <- pwaycats[1] #for testing
   
   
   
@@ -534,14 +534,11 @@ deseq_to_gsea <- function(deseqres,
     #select pathways with more than just 1 gene in the list
     gseares <- gseares[gseares$size > 2,,drop=F]
     
-    # #skip if no significant results
-    # if( nrow(gseares)==0){ return() }
-    # 
-    # 
-    # 
-    # dp <- gseares_dotplot(gseares, n_up = 10, n_dn = 10, line_char_width = 100)
-    # 
-    # 
+    #add the category, if there are any rows at all...
+    if( nrow(gseares) > 0 ){
+      gseares$category <- cat
+      gseares <- gseares[,c('pathway', 'category', 'pval', 'padj', 'log2err', 'ES', 'NES', 'size', 'leadingEdge')]
+    }
     
     
     #also, adjust the leading egde
@@ -967,8 +964,7 @@ gsea_to_aPEAR_clusters <- function(gseareslist,
     
     
     #write it in the main outdir
-    # gdffile <- paste0(outdir_apear, '/AllPathways_aPEAR_clustered.csv')
-    gdffile <- paste0(outdir, '/AllPathways_aPEAR_clustered.csv')
+    gdffile <- paste0(outdir, '/SignificantPathwaysTable_WithClusters.csv')
     write.csv(gdf, gdffile, row.names = F)
     
     apearoutlist_file <- paste0(outdir_apear, '/robject_apearlist.rds')
