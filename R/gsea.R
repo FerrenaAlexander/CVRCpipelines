@@ -566,7 +566,7 @@ deseq_to_gsea <- function(deseqres,
   #count number of enriched pathways
   numpways <- sapply(gseareslist, nrow)
   numpways_updn <- sapply(gseareslist, function(x){
-    table(factor(sign(x$NES), c(-1, 1)))
+    table(factor(sign(x$NES), c(1, -1)))
   })
   
   if(verbose == T){
