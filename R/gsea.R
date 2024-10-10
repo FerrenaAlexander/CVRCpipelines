@@ -1004,7 +1004,7 @@ gsea_to_aPEAR_clusters <- function(gseareslist,
                           
     )
     
-    write('FGSEA and aPEAR log\n\n', logfile, append = T)
+    write('aPEAR log\n\n', logfile, append = T)
     
     lapply(write_lines_l, function(x){write(x, logfile, append = T)})
     
