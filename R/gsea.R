@@ -601,7 +601,7 @@ deseq_to_gsea <- function(deseqres,
     
     if(verbose == T){message(' - 4 writing outputs to ', outdir_tables)}
     
-    lapply(pwaycats, function(cat){
+    lapply( names(gseareslist) , function(cat){
       gseares <- gseareslist[[cat]]
       resfile <- paste0(outdir_tables, '/GSEA_results_', cat, '.csv')
       write.csv(gseares, resfile, row.names = F)
@@ -614,16 +614,25 @@ deseq_to_gsea <- function(deseqres,
   
   #write some log information out
   
-  logfile <- paste0(outdir, '/logfile_fgsea.txt')
+  logfile <- paste0(outdir, '/logfile.txt')
   
   write_lines_l <- list(date(),
                         paste0('fgsea version - ', packageVersion('fgsea')),
+                        
+                        paste0('\n'),
+                        
                         paste0('pathway_padj_thres - ', pathway_padj_thres),
                         
                         paste0('\n\n\n'),
                         
+                        paste0(tab['TRUE'], ' genes from deseqres$', gene_identifier_type, ' (',perctab['TRUE'],'%)', ' were detected in pathways$', gene_identifier_type,'.'),
+                        
+                        paste0('\n'),
+                        
                         paste0('Num pathways sig:'),
-                        paste( paste0(names(numpways), ' = ', numpways, ', up = ', as.data.frame.matrix(numpways_updn)[1,], ', dn = ',as.data.frame.matrix(numpways_updn)[2,]), collapse='\n')
+                        paste( paste0(names(numpways), ' = ', numpways, ', up = ', as.data.frame.matrix(numpways_updn)[1,], ', dn = ',as.data.frame.matrix(numpways_updn)[2,]), collapse='\n'),
+                        
+                        paste0('\n\n\n')
                         
                         
   )
@@ -973,10 +982,10 @@ gsea_to_aPEAR_clusters <- function(gseareslist,
     numpways['UNCLUSTERED'] = table(factor(is.na(gdf$aPEAR_Clusters), c('FALSE', 'TRUE')))['TRUE']
     
     
-    logfile <- paste0(outdir, '/logfile_aPEAR.txt')
+    logfile <- paste0(outdir, '/logfile.txt')
     
-    write_lines_l <- list(date(),
-                          paste0('fgsea version - ', packageVersion('fgsea')),
+    write_lines_l <- list(# date(),
+                          # paste0('fgsea version - ', packageVersion('fgsea')),
                           paste0('aPEAR version - ', packageVersion('aPEAR')),
                           
                           paste0('\n'),
@@ -995,7 +1004,7 @@ gsea_to_aPEAR_clusters <- function(gseareslist,
                           
     )
     
-    write('FGSEA and aPEAR log\n\n', logfile)
+    write('FGSEA and aPEAR log\n\n', logfile, append = T)
     
     lapply(write_lines_l, function(x){write(x, logfile, append = T)})
     
