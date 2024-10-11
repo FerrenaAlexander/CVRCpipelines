@@ -212,15 +212,17 @@ fix_underflow <- function(scores,
 
 #' Wrapper script for FGSEA applied to MSIGDB subcategories
 #' 
-#' Will run FGSEA over the following MSIGB subcategories: "HALLMARK" (technical a category but coded as a sub-category here), "GO_BP", "GO_MF", "GO_CC", "CP_REACTOME", "CP_KEGG", "TFT_GTRD", "TFT_TFT_Legacy". Makes extensive use of the fgsea package. ["Fast Gene Set Enrichment Analysis", Korotkevich et al bioRxiv 2021.](https://www.biorxiv.org/content/10.1101/060012v3)
+#' Will run FGSEA over the following MSIGB subcategories: "HALLMARK" (technical a category but coded as a sub-category here), "GO_BP", "GO_MF", "GO_CC", "CP_REACTOME", "CP_KEGG", "TFT_GTRD", "TFT_TFT_Legacy". Makes extensive use of the fgsea package. ["Fast Gene Set Enrichment Analysis", Korotkevich et al bioRxiv 2021.](https://www.biorxiv.org/content/10.1101/060012v3). Ideally, GSEA should be used with the full result list.
 #'
 #' @param deseqres data.frame, minimally must have columns named "log2FoldChange", "pvalue", and a gene column (with column name denoted by `gene_identifier_type`)
 #' @param gene_identifier_type string, default "gene_symbol", column name of gene identifiers. must be one of 'gene_symbol', 'gene_name', 'ensembl_gene', 'entrez_gene'. if 'gene_name' is passed, it will create and use 'gene_symbol'
-#' @param pathways data.frame of pathways, output of `preppathways_pathwayanalysis_crosscondition_module()`, recommend you run this once and store use the pathways the way you would for a reference genome
+#' @param pathways data.frame of pathways, output of `preppathways_pathwayanalysis_crosscondition_module()`, recommend you run this once and store use the pathways the way you would for a reference genome. Minimally, this is a data.frame where each row is a gene and the pathwy it is part of, with the following column names: "gs_name", the pathways; "gs_subcat", the categories/MSIGDB sub-categories of the pathways; and a column matching the parameter `gene_identifier_type`, such as "gene_symbol" for the genes in each pathway
 #' @param outdir string, path to output directory. will create a subdir called "GSEA_tables"
 #' @param pathway_padj_thres numeric, default 0.1, alpha for adjusted pvalue threshold for gsea pathways
+#' @param pathway_pval_thres numeric, default 1, alpha for nominal pvalue threshold for gsea pathways, normally not used. if set to any value other than 1, then pathway_padj_thres will be set to 1. 
 #' @param workernum integer, default 1, number of CPUs, parallelization occurs over the eight database categories, max is 8
 #' @param verbose T/F, default F, verbosity
+#' @param pwaycats string or character vector. List of pathway subcategories to run. it should match the column of `pathways$gs_subcat`. Default is: c("HALLMARK", "GO_BP", "GO_MF", "GO_CC", "CP_REACTOME", "CP_KEGG", "TFT_GTRD", "TFT_TFT_Legacy")
 #'
 #' @return
 #' @export
@@ -231,8 +233,10 @@ deseq_to_gsea <- function(deseqres,
                           pathways,
                           outdir,
                           pathway_padj_thres = 0.1,
+                          pathway_pval_thres = 1,
                           workernum = 1,
-                          verbose = F
+                          verbose = F,
+                          pwaycats = c("HALLMARK", "GO_BP", "GO_MF", "GO_CC", "CP_REACTOME", "CP_KEGG", "TFT_GTRD", "TFT_TFT_Legacy")
                           
 ){
   
@@ -341,6 +345,9 @@ deseq_to_gsea <- function(deseqres,
   
   
   
+  
+  
+  
   # check number of genes from deseqres that are in the database
   
   tab <- table(deseqres[,gene_identifier_type] %in% pathways[,gene_identifier_type])
@@ -370,7 +377,7 @@ deseq_to_gsea <- function(deseqres,
   
   ## make sure pwaycats are in pathways
   # this is the pre-defined list of subcategories we will loop over
-  pwaycats <- c("HALLMARK", "GO_BP", "GO_MF", "GO_CC", "CP_REACTOME", "CP_KEGG", "TFT_GTRD", "TFT_TFT_Legacy")
+  # pwaycats <- c("HALLMARK", "GO_BP", "GO_MF", "GO_CC", "CP_REACTOME", "CP_KEGG", "TFT_GTRD", "TFT_TFT_Legacy")
   names(pwaycats) <- pwaycats
   
   unique_subcats <- unique(pathways$gs_subcat)
@@ -382,6 +389,18 @@ deseq_to_gsea <- function(deseqres,
     
     stop('the following database subcategories "',paste(missing_pwaycats, collapse = ', '), '" are missing from unique(pathways$gs_subcat).\nExpected to find ', paste(pwaycats, collapse = ', '), 
          '\nPlease run the function: preppathways_pathwayanalysis_crosscondition_module()')
+    
+  }
+  
+  
+  
+  #if using pval thres, do not use padj thres
+  
+  if(pathway_pval_thres != 1){
+    
+    
+    pathway_padj_thres <- 1
+    
     
   }
   
@@ -482,7 +501,7 @@ deseq_to_gsea <- function(deseqres,
   
   
   gseareslist <- foreach(cat = pwaycats, 
-                         .export = c('pathways', 'scores', 'outdir', 'pathway_padj_thres', 'gene_identifier_type'),
+                         .export = c('pathways', 'scores', 'outdir', 'pathway_padj_thres', 'pathway_pval_thres', 'gene_identifier_type'),
                          .packages = c('fgsea', 'stringr', 'ggplot2'),
                          .verbose = verbose
   ) %dopar% {
@@ -528,7 +547,8 @@ deseq_to_gsea <- function(deseqres,
     #order by NES
     gseares <- gseares[order(gseares$NES, decreasing = T),]
     
-    #apply cutoff of pathway_padj_thres
+    #apply cutoff of pathway_pval_thres, then pathway_padj_thres
+    gseares <- gseares[gseares$padj < pathway_pval_thres, ,drop=F]
     gseares <- gseares[gseares$padj < pathway_padj_thres, ,drop=F]
     
     #select pathways with more than just 1 gene in the list
@@ -618,6 +638,7 @@ deseq_to_gsea <- function(deseqres,
                         
                         paste0('\n'),
                         
+                        paste0('pathway_pval_thres - ', pathway_pval_thres),
                         paste0('pathway_padj_thres - ', pathway_padj_thres),
                         
                         paste0('\n\n\n'),
@@ -825,7 +846,7 @@ gseares_dotplot_listwrap <- function(gseareslist,
 #' @param gseareslist output of `deseq_to_gsea()`
 #' @param aPEAR_cluster_min_size integer, default 3, minimum aPEAR cluster size after clustering the pathways
 #' @param min_pathway_gene_size integer, default 3, minimum number of genes in pathway to be considered for clustering
-#' @param num_input_sig_pathways_updn integer, default 250, max number of positive and negative NES pathways included, respecitvely. for example, when set to 250, 500 pathways maximum will be used, 250 positive and 250 negative
+#' @param num_input_sig_pathways_updn integer, default 250, max number of positive and negative NES pathways included, respectively. for example, when set to 250, 500 pathways maximum will be used, 250 positive and 250 negative
 #' @param outdir string, path to output directory, will create a subdir called "aPEAR"
 #'
 #' @return

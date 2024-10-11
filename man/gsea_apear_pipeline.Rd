@@ -20,5 +20,5 @@ gsea_apear_pipeline(deseqres, pathways, outdir, verbose, workernum, ...)
 \item{...}{other parameters passed on to pipeline modules. For more details, see the documentation for the pipeline modules: \code{deseq_to_gsea()}, \code{gseares_dotplot_listwrap()}, \code{gsea_to_aPEAR_clusters()}, \code{plot_apear_clusters()}, \code{plot_apear_cluster_pathway_dotplots()}}
 }
 \description{
-A wrapper pipeline function for GSEA pathway analsis and aPEAR clustering of enriched pathways, starting from differential expression (DE) summary statistics. Ideally, GSEA should be used with the full result list, not just the subsetted "significant" DEGs. For more details, see the documentation for the pipeline modules: \code{deseq_to_gsea()}, \code{gseares_dotplot_listwrap()}, \code{gsea_to_aPEAR_clusters()}, \code{plot_apear_clusters()}, \code{plot_apear_cluster_pathway_dotplots()}
+A wrapper pipeline function for GSEA pathway analsis and aPEAR clustering of enriched pathways, starting from differential expression (DE) summary statistics. Ideally, GSEA should be used with the full result list. For more details, see the documentation for the pipeline modules: \code{deseq_to_gsea()}, \code{gseares_dotplot_listwrap()}, \code{gsea_to_aPEAR_clusters()}, \code{plot_apear_clusters()}, \code{plot_apear_cluster_pathway_dotplots()}
 }

@@ -1,14 +1,16 @@
-#' Full pipeline for DEGs to GSEA and aPEAR pathway clustering.
+#' Full pipeline for DEGs to GSEA and aPEAR pathway clustering. (WARNING: TO CHANGE ANY DEFAULT PARAMETERS, USE THE PIPELINE SUBMODULES)
 #' 
-#' A wrapper pipeline function for GSEA pathway analsis and aPEAR clustering of enriched pathways, starting from differential expression (DE) summary statistics. Ideally, GSEA should be used with the full result list, not just the subsetted "significant" DEGs. For more details, see the documentation for the pipeline modules: `deseq_to_gsea()`, `gseares_dotplot_listwrap()`, `gsea_to_aPEAR_clusters()`, `plot_apear_clusters()`, `plot_apear_cluster_pathway_dotplots()`
+#' A wrapper pipeline function for GSEA pathway analysis and aPEAR clustering of enriched pathways, starting from differential expression (DE) summary statistics. Ideally, GSEA should be used with the full result list. NOTE - 
 #'
 #' @param deseqres data.frame of differential expression, minimally must have columns named "log2FoldChange", "pvalue", and a gene column (with column name denoted by `gene_identifier_type`)
-#' @param pathways data.frame of pathways, output of `preppathways_pathwayanalysis_crosscondition_module()`, recommend you run this once and store use the pathways the way you would for a reference genome
+#' @param pathways data.frame of pathways, output of \code{\link[CVRCpipelines]{preppathways_pathwayanalysis_crosscondition_module}}, recommend you run this once and store use the pathways the way you would for a reference genome
 #' @param outdir string, path to output directory. Will write result tables and plots to subdirectories inside of here. 
+#' @param aPEAR_cluster_min_size integer, default 3, minimum aPEAR cluster size after clustering the pathways
+#' @param min_pathway_gene_size integer, default 3, minimum number of genes in pathway to be considered for clustering
+#' @param num_input_sig_pathways_updn integer, default 250, max number of positive and negative NES pathways included, respectively. for example, when set to 250, 500 pathways maximum will be used, 250 positive and 250 negative
 #' @param verbose T/F, default F
 #' @param workernum integer, default 1, number of CPUs
-#' @param ... other parameters passed on to pipeline modules. For more details, see the documentation for the pipeline modules: `deseq_to_gsea()`, `gseares_dotplot_listwrap()`, `gsea_to_aPEAR_clusters()`, `plot_apear_clusters()`, `plot_apear_cluster_pathway_dotplots()`
-#'
+#' @param ... Other parameters passed on to \code{\link[CVRCpipelines]{deseq_to_gsea}}
 #'
 #' @return
 #' @export
@@ -17,6 +19,9 @@
 gsea_apear_pipeline <- function(deseqres, 
                                 pathways,
                                 outdir,
+                                aPEAR_cluster_min_size = 3,
+                                min_pathway_gene_size = 3,
+                                num_input_sig_pathways_updn = 250,
                                 verbose,
                                 workernum,
                                 ...
@@ -48,8 +53,8 @@ gsea_apear_pipeline <- function(deseqres,
   if(verbose == T){ message('\nB. Making Dotplots\n') }
   
   dp_l <- gseares_dotplot_listwrap(gseareslist, 
-                                   outdir = outdir,
-                                   ...)
+                                   outdir = outdir
+                                   )
   
   
   
@@ -57,8 +62,8 @@ gsea_apear_pipeline <- function(deseqres,
   if(verbose == T){ message('\nC. aPEAR Clustering\n') }
   
   apearoutlist <- gsea_to_aPEAR_clusters(gseareslist,
-                                         outdir = outdir,
-                                         ...)
+                                         outdir = outdir
+                                         )
   
   
   
@@ -66,14 +71,12 @@ gsea_apear_pipeline <- function(deseqres,
   if(verbose == T){ message('\nD. aPEAR Enrichment Network Plot\n') }
   
   apear_plot <- plot_apear_clusters(apearoutlist,
-                                    outdir = outdir,
-                                    ...)
+                                    outdir = outdir)
   
   # apear_plot
   if(verbose == T){ message('\nE. aPEAR clusters pathways dotplot\n') }
   clust_dp_l <- plot_apear_cluster_pathway_dotplots(apearoutlist,
-                                                    outdir = outdir,
-                                                    ...
+                                                    outdir = outdir
   )
   
   
