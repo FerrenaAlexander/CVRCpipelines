@@ -2,23 +2,39 @@
 % Please edit documentation in R/gsea_pipeline_wrapper.R
 \name{gsea_apear_pipeline}
 \alias{gsea_apear_pipeline}
-\title{Full pipeline for DEGs to GSEA and aPEAR pathway clustering.}
+\title{Full pipeline for DEGs to GSEA and aPEAR pathway clustering. (WARNING: TO CHANGE ANY DEFAULT PARAMETERS, USE THE PIPELINE SUBMODULES)}
 \usage{
-gsea_apear_pipeline(deseqres, pathways, outdir, verbose, workernum, ...)
+gsea_apear_pipeline(
+  deseqres,
+  pathways,
+  outdir,
+  aPEAR_cluster_min_size = 3,
+  min_pathway_gene_size = 3,
+  num_input_sig_pathways_updn = 250,
+  verbose,
+  workernum,
+  ...
+)
 }
 \arguments{
 \item{deseqres}{data.frame of differential expression, minimally must have columns named "log2FoldChange", "pvalue", and a gene column (with column name denoted by \code{gene_identifier_type})}
 
-\item{pathways}{data.frame of pathways, output of \code{preppathways_pathwayanalysis_crosscondition_module()}, recommend you run this once and store use the pathways the way you would for a reference genome}
+\item{pathways}{data.frame of pathways, output of \code{\link[CVRCpipelines]{preppathways_pathwayanalysis_crosscondition_module}}, recommend you run this once and store use the pathways the way you would for a reference genome}
 
 \item{outdir}{string, path to output directory. Will write result tables and plots to subdirectories inside of here.}
+
+\item{aPEAR_cluster_min_size}{integer, default 3, minimum aPEAR cluster size after clustering the pathways}
+
+\item{min_pathway_gene_size}{integer, default 3, minimum number of genes in pathway to be considered for clustering}
+
+\item{num_input_sig_pathways_updn}{integer, default 250, max number of positive and negative NES pathways included, respectively. for example, when set to 250, 500 pathways maximum will be used, 250 positive and 250 negative}
 
 \item{verbose}{T/F, default F}
 
 \item{workernum}{integer, default 1, number of CPUs}
 
-\item{...}{other parameters passed on to pipeline modules. For more details, see the documentation for the pipeline modules: \code{deseq_to_gsea()}, \code{gseares_dotplot_listwrap()}, \code{gsea_to_aPEAR_clusters()}, \code{plot_apear_clusters()}, \code{plot_apear_cluster_pathway_dotplots()}}
+\item{...}{Other parameters passed on to \code{\link[CVRCpipelines]{deseq_to_gsea}}}
 }
 \description{
-A wrapper pipeline function for GSEA pathway analsis and aPEAR clustering of enriched pathways, starting from differential expression (DE) summary statistics. Ideally, GSEA should be used with the full result list. For more details, see the documentation for the pipeline modules: \code{deseq_to_gsea()}, \code{gseares_dotplot_listwrap()}, \code{gsea_to_aPEAR_clusters()}, \code{plot_apear_clusters()}, \code{plot_apear_cluster_pathway_dotplots()}
+A wrapper pipeline function for GSEA pathway analysis and aPEAR clustering of enriched pathways, starting from differential expression (DE) summary statistics. Ideally, GSEA should be used with the full result list. NOTE -
 }
