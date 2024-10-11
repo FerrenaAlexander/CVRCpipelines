@@ -12,7 +12,7 @@ preppathways_pathwayanalysis_crosscondition_module(species, outdir_int)
 \item{outdir_int}{string, directory to save pathways to. Will create a sub-directory called "pathwayanalysis_crosscondition" and save inside of there. We save pathways since the database updates over time.}
 }
 \value{
-a data.frame similar to the output of \code{msigdbr::msigdbr}, but filtering for some specific categories / subcategories.
+a data.frame similar to the output of \code{\link[msigdbr:msigdbr]{msigdbr::msigdbr()}}, but filtering for some specific categories / subcategories.
 }
 \description{
 Prep pathways from MSIGDB via the msigdbr package. We include the Hallmarks category; Gene Ontology BP, MF and CC; Reactome; KEGG; transcription factor CHIP-seq targets in the Gene Transcription Regulation Database (TFT_GTRD); inferred transcription factor targets via motif analysis from Xie et al Nature 2005 (TFT_Legacy). Only gene sets with < 500 genes are included. This function is identical to the scDAPP prep_pathways function.

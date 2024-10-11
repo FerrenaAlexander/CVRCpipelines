@@ -24,11 +24,11 @@ gseares_dotplot_listwrap(
 
 \item{pdfwidth}{numeric, default 7}
 
-\item{...}{other arguments passed to \code{gseares_dotplot()}}
+\item{...}{other arguments passed to \code{\link[=gseares_dotplot]{gseares_dotplot()}}}
 }
 \value{
 a list of ggplot dotplots
 }
 \description{
-list wrapper around \code{gseares_dotplot()}, see that function for details
+list wrapper around \code{\link[=gseares_dotplot]{gseares_dotplot()}}. see that function for details
 }

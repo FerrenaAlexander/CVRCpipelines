@@ -2,7 +2,7 @@
 % Please edit documentation in R/gsea_pipeline_wrapper.R
 \name{gsea_apear_pipeline}
 \alias{gsea_apear_pipeline}
-\title{Full pipeline for DEGs to GSEA and aPEAR pathway clustering. (WARNING: TO CHANGE ANY DEFAULT PARAMETERS, USE THE PIPELINE SUBMODULES)}
+\title{Full pipeline for DEGs to GSEA and aPEAR pathway clustering}
 \usage{
 gsea_apear_pipeline(
   deseqres,
@@ -19,7 +19,7 @@ gsea_apear_pipeline(
 \arguments{
 \item{deseqres}{data.frame of differential expression, minimally must have columns named "log2FoldChange", "pvalue", and a gene column (with column name denoted by \code{gene_identifier_type})}
 
-\item{pathways}{data.frame of pathways, output of \code{\link[CVRCpipelines]{preppathways_pathwayanalysis_crosscondition_module}}, recommend you run this once and store use the pathways the way you would for a reference genome}
+\item{pathways}{data.frame of pathways, output of \code{\link[=preppathways_pathwayanalysis_crosscondition_module]{preppathways_pathwayanalysis_crosscondition_module()}}, recommend you run this once and store use the pathways the way you would for a reference genome. Minimally, this is a data.frame where each row is a gene and the pathwy it is part of, with the following column names: "gs_name", the pathways; "gs_subcat", the categories/MSIGDB sub-categories of the pathways; and a column matching the parameter \code{gene_identifier_type}, such as "gene_symbol" for the genes in each pathway}
 
 \item{outdir}{string, path to output directory. Will write result tables and plots to subdirectories inside of here.}
 
@@ -33,8 +33,8 @@ gsea_apear_pipeline(
 
 \item{workernum}{integer, default 1, number of CPUs}
 
-\item{...}{Other parameters passed on to \code{\link[CVRCpipelines]{deseq_to_gsea}}}
+\item{...}{Other parameters passed on to \link{deseq_to_gsea}}
 }
 \description{
-A wrapper pipeline function for GSEA pathway analysis and aPEAR clustering of enriched pathways, starting from differential expression (DE) summary statistics. Ideally, GSEA should be used with the full result list. NOTE -
+A wrapper pipeline function for GSEA pathway analysis and aPEAR clustering of enriched pathways, starting from differential expression (DE) summary statistics. Ideally, GSEA should be used with the full result list.
 }

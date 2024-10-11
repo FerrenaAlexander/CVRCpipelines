@@ -23,7 +23,7 @@ gseares_dotplot(
 
 \item{n_dn}{integer, default 5, max number of dnregulated pathways to plot (positive NES)}
 
-\item{line_char_width}{integer, default 35, max character width per line of pathway y axis labels, newline added after words, see \code{stringr::str_wrap()}}
+\item{line_char_width}{integer, default 35, max character width per line of pathway y axis labels, newline added after words, see \code{\link[stringr:str_wrap]{stringr::str_wrap()}}}
 
 \item{up_color}{color string name ort code, default 'red'}
 

@@ -16,7 +16,7 @@ plot_apear_clusters(
 )
 }
 \arguments{
-\item{apearoutlist}{the output of \code{gsea_to_aPEAR_clusters()}}
+\item{apearoutlist}{the output of \code{\link[=gsea_to_aPEAR_clusters]{gsea_to_aPEAR_clusters()}}}
 
 \item{outdir}{string, path to output directory, will create a subdir called "aPEAR/aPEAR_GraphPlots"}
 
@@ -30,7 +30,7 @@ plot_apear_clusters(
 
 \item{pdfwidth}{numeric, default 10}
 
-\item{...}{other arguments passed to \code{gseares_dotplot()}}
+\item{...}{other arguments passed to \code{\link[aPEAR:plotPathClusters]{aPEAR::plotPathClusters()}}}
 }
 \description{
 A wrapper for plotting the aPEAR enrichment network. Sometimes looks weird, so it may be useful to run this a few times, will produce a different plot each time.

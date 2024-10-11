@@ -13,7 +13,7 @@ gsea_to_aPEAR_clusters(
 )
 }
 \arguments{
-\item{gseareslist}{output of \code{deseq_to_gsea()}}
+\item{gseareslist}{output of \code{\link[=deseq_to_gsea]{deseq_to_gsea()}}}
 
 \item{aPEAR_cluster_min_size}{integer, default 3, minimum aPEAR cluster size after clustering the pathways}
 
@@ -24,5 +24,5 @@ gsea_to_aPEAR_clusters(
 \item{outdir}{string, path to output directory, will create a subdir called "aPEAR"}
 }
 \description{
-using the gsea result list from \code{deseq_to_gsea()}, run aPEAR. \href{https://academic.oup.com/bioinformatics/article/39/11/btad672/7342237}{"Advanced Pathway Enrichment Analysis Representation", Kerseviciute and Gordevicius Bioinformatics 2023.}. Note many pathways may not be clustered due to uniqueness or being assigned to clusters below minimum cluster size.
+Using the gsea result list from \code{\link[=deseq_to_gsea]{deseq_to_gsea()}}, run aPEAR. \href{https://academic.oup.com/bioinformatics/article/39/11/btad672/7342237}{"Advanced Pathway Enrichment Analysis Representation", Kerseviciute and Gordevicius Bioinformatics 2023.}. Note many pathways may not be clustered due to uniqueness or being assigned to clusters below minimum cluster size.
 }

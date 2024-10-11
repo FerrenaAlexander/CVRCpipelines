@@ -22,7 +22,7 @@ deseq_to_gsea(
 
 \item{gene_identifier_type}{string, default "gene_symbol", column name of gene identifiers. must be one of 'gene_symbol', 'gene_name', 'ensembl_gene', 'entrez_gene'. if 'gene_name' is passed, it will create and use 'gene_symbol'}
 
-\item{pathways}{data.frame of pathways, output of \code{preppathways_pathwayanalysis_crosscondition_module()}, recommend you run this once and store use the pathways the way you would for a reference genome. Minimally, this is a data.frame where each row is a gene and the pathwy it is part of, with the following column names: "gs_name", the pathways; "gs_subcat", the categories/MSIGDB sub-categories of the pathways; and a column matching the parameter \code{gene_identifier_type}, such as "gene_symbol" for the genes in each pathway}
+\item{pathways}{data.frame of pathways, output of \code{\link[=preppathways_pathwayanalysis_crosscondition_module]{preppathways_pathwayanalysis_crosscondition_module()}}, recommend you run this once and store use the pathways the way you would for a reference genome. Minimally, this is a data.frame where each row is a gene and the pathwy it is part of, with the following column names: "gs_name", the pathways; "gs_subcat", the categories/MSIGDB sub-categories of the pathways; and a column matching the parameter \code{gene_identifier_type}, such as "gene_symbol" for the genes in each pathway}
 
 \item{outdir}{string, path to output directory. will create a subdir called "GSEA_tables"}
 
@@ -37,5 +37,5 @@ deseq_to_gsea(
 \item{pwaycats}{string or character vector. List of pathway subcategories to run. it should match the column of \code{pathways$gs_subcat}. Default is: c("HALLMARK", "GO_BP", "GO_MF", "GO_CC", "CP_REACTOME", "CP_KEGG", "TFT_GTRD", "TFT_TFT_Legacy")}
 }
 \description{
-Will run FGSEA over the following MSIGB subcategories: "HALLMARK" (technical a category but coded as a sub-category here), "GO_BP", "GO_MF", "GO_CC", "CP_REACTOME", "CP_KEGG", "TFT_GTRD", "TFT_TFT_Legacy". Makes extensive use of the fgsea package. \href{https://www.biorxiv.org/content/10.1101/060012v3}{"Fast Gene Set Enrichment Analysis", Korotkevich et al bioRxiv 2021.}. Ideally, GSEA should be used with the full result list.
+Will run FGSEA over the following MSIGB subcategories: "HALLMARK" (technical a category but coded as a sub-category here), "GO_BP", "GO_MF", "GO_CC", "CP_REACTOME", "CP_KEGG", "TFT_GTRD", "TFT_TFT_Legacy". Makes extensive use of the fgsea package. \href{https://www.biorxiv.org/content/10.1101/060012v3}{"Fast Gene Set Enrichment Analysis", Korotkevich et al bioRxiv 2021}. Ideally, GSEA should be used with the full result list.
 }

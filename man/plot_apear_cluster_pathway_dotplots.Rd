@@ -13,7 +13,7 @@ plot_apear_cluster_pathway_dotplots(
 )
 }
 \arguments{
-\item{apearoutlist}{the output of \code{gsea_to_aPEAR_clusters()}}
+\item{apearoutlist}{the output of \code{\link[=gsea_to_aPEAR_clusters]{gsea_to_aPEAR_clusters()}}}
 
 \item{outdir}{string, path to output directory, will create a subdir called "aPEAR/aPEAR_ClusterPathways_Dotplots"}
 
@@ -21,7 +21,7 @@ plot_apear_cluster_pathway_dotplots(
 
 \item{pdfwidth}{integer, default 7}
 
-\item{...}{other arguments passed to}
+\item{...}{other arguments passed to \code{\link[=gseares_dotplot]{gseares_dotplot()}}}
 }
 \description{
 For each aPEAR cluster, make a dotplot of the pathways in that cluster
