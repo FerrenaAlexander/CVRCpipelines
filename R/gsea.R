@@ -635,6 +635,7 @@ deseq_to_gsea <- function(deseqres,
   
   write_lines_l <- list(date(),
                         paste0('fgsea version - ', packageVersion('fgsea')),
+                        paste0('CVRCpipelines version - ', packageVersion('CVRCpipelines')),
                         
                         paste0('\n'),
                         
