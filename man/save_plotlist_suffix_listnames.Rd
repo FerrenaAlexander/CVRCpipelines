@@ -9,7 +9,9 @@ save_plotlist_suffix_listnames(
   plotlist,
   plotdir,
   pdfheight = NULL,
-  pdfwidth = NULL
+  pdfwidth = NULL,
+  title_separator = "_",
+  verbose = F
 )
 }
 \arguments{
@@ -22,6 +24,10 @@ save_plotlist_suffix_listnames(
 \item{pdfheight}{height of pdf}
 
 \item{pdfwidth}{width of pdf}
+
+\item{title_separator}{string, default '_', separator string between \code{plotfilename} and list element names in pdf file name}
+
+\item{verbose}{T/F, default F, whether to report which element is being plotted during loop, useful to detect errors}
 }
 \value{
 a list of files in the \code{plotdir}

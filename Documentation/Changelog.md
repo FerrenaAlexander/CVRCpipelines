@@ -3,6 +3,10 @@
 For all changes, please update changelog and use Year-Month-Day
 
 
+## 0.1.2
+2024.10.23
+- added options "title_separator" and "verbose" to `save_plotlist_suffix_listnames()` function
+
 ## 0.1.1
 2024.10.09
 - add pval threshold option
