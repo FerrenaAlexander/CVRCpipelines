@@ -625,7 +625,7 @@ deseq_to_gsea <- function(deseqres,
       resfile <- paste0(outdir_tables, '/GSEA_results_', cat, '.csv')
       
       if(filename_prefix != ''){
-        paste0(outdir_tables, '/GSEA_results_', cat, '_', filename_prefix, '.csv')
+        resfile <- paste0(outdir_tables, '/GSEA_results_', cat, '_', filename_prefix, '.csv')
       }
       
       write.csv(gseares, resfile, row.names = F)
