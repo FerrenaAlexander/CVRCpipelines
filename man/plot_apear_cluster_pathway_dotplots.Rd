@@ -9,6 +9,7 @@ plot_apear_cluster_pathway_dotplots(
   outdir,
   pdfheight = 7,
   pdfwidth = 7,
+  filename_prefix = "",
   ...
 )
 }
@@ -20,6 +21,8 @@ plot_apear_cluster_pathway_dotplots(
 \item{pdfheight}{integer, default 7}
 
 \item{pdfwidth}{integer, default 7}
+
+\item{filename_prefix}{string, default is empty. An optional string to add to all saved filenames, useful to open multiple tables later in excel.}
 
 \item{...}{other arguments passed to \code{\link[=gseares_dotplot]{gseares_dotplot()}}}
 }

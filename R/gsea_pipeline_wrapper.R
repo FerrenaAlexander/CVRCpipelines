@@ -9,7 +9,8 @@
 #' @param min_pathway_gene_size integer, default 3, minimum number of genes in pathway to be considered for clustering
 #' @param num_input_sig_pathways_updn integer, default 250, max number of positive and negative NES pathways included, respectively. for example, when set to 250, 500 pathways maximum will be used, 250 positive and 250 negative
 #' @param verbose T/F, default F
-#' @param workernum integer, default 1, number of CPUs
+#' @param workernum integer, default 1, number of CPUs, parallelization occurs over the default database categories, so max is set to 8
+#' @param filename_prefix string, default is empty. An optional string to add to all saved filenames, useful to open multiple tables later in excel.
 #' @param ... Other parameters passed on to [CVRCpipelines::deseq_to_gsea]
 #'
 #' @return
@@ -24,6 +25,7 @@ gsea_apear_pipeline <- function(deseqres,
                                 num_input_sig_pathways_updn = 250,
                                 verbose,
                                 workernum,
+                                filename_prefix = '',
                                 ...
                                 ){
   
@@ -44,6 +46,7 @@ gsea_apear_pipeline <- function(deseqres,
                                outdir = outdir,
                                workernum = workernum,
                                verbose = verbose,
+                               filename_prefix=filename_prefix,
                                ...
                                
   )
@@ -53,7 +56,8 @@ gsea_apear_pipeline <- function(deseqres,
   if(verbose == T){ message('\nB. Making Dotplots\n') }
   
   dp_l <- gseares_dotplot_listwrap(gseareslist, 
-                                   outdir = outdir
+                                   outdir = outdir,
+                                   filename_prefix=filename_prefix
                                    )
   
   
@@ -62,7 +66,8 @@ gsea_apear_pipeline <- function(deseqres,
   if(verbose == T){ message('\nC. aPEAR Clustering\n') }
   
   apearoutlist <- gsea_to_aPEAR_clusters(gseareslist,
-                                         outdir = outdir
+                                         outdir = outdir,
+                                         filename_prefix=filename_prefix
                                          )
   
   
@@ -71,12 +76,15 @@ gsea_apear_pipeline <- function(deseqres,
   if(verbose == T){ message('\nD. aPEAR Enrichment Network Plot\n') }
   
   apear_plot <- plot_apear_clusters(apearoutlist,
-                                    outdir = outdir)
+                                    outdir = outdir,
+                                    filename_prefix=filename_prefix
+                                    )
   
   # apear_plot
   if(verbose == T){ message('\nE. aPEAR clusters pathways dotplot\n') }
   clust_dp_l <- plot_apear_cluster_pathway_dotplots(apearoutlist,
-                                                    outdir = outdir
+                                                    outdir = outdir,
+                                                    filename_prefix=filename_prefix
   )
   
   

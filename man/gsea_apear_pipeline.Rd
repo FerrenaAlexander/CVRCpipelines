@@ -13,6 +13,7 @@ gsea_apear_pipeline(
   num_input_sig_pathways_updn = 250,
   verbose,
   workernum,
+  filename_prefix = "",
   ...
 )
 }
@@ -31,7 +32,9 @@ gsea_apear_pipeline(
 
 \item{verbose}{T/F, default F}
 
-\item{workernum}{integer, default 1, number of CPUs}
+\item{workernum}{integer, default 1, number of CPUs, parallelization occurs over the default database categories, so max is set to 8}
+
+\item{filename_prefix}{string, default is empty. An optional string to add to all saved filenames, useful to open multiple tables later in excel.}
 
 \item{...}{Other parameters passed on to \link{deseq_to_gsea}}
 }

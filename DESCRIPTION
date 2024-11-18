@@ -1,6 +1,6 @@
 Package: CVRCpipelines
 Title: Tools for HTS analysis
-Version: 0.1.1
+Version: 0.1.3
 Authors@R: 
     person("Alexander", "Ferrena", , "alexanderferrena@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-9578-8683"))

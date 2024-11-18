@@ -14,7 +14,8 @@ deseq_to_gsea(
   workernum = 1,
   verbose = F,
   pwaycats = c("HALLMARK", "GO_BP", "GO_MF", "GO_CC", "CP_REACTOME", "CP_KEGG",
-    "TFT_GTRD", "TFT_TFT_Legacy")
+    "TFT_GTRD", "TFT_TFT_Legacy"),
+  filename_prefix = ""
 )
 }
 \arguments{
@@ -35,6 +36,8 @@ deseq_to_gsea(
 \item{verbose}{T/F, default F, verbosity}
 
 \item{pwaycats}{string or character vector. List of pathway subcategories to run. it should match the column of \code{pathways$gs_subcat}. Default is: c("HALLMARK", "GO_BP", "GO_MF", "GO_CC", "CP_REACTOME", "CP_KEGG", "TFT_GTRD", "TFT_TFT_Legacy")}
+
+\item{filename_prefix}{string, default is empty. An optional string to add to all saved filenames, useful to open multiple tables later in excel.}
 }
 \description{
 Will run FGSEA over the following MSIGB subcategories: "HALLMARK" (technical a category but coded as a sub-category here), "GO_BP", "GO_MF", "GO_CC", "CP_REACTOME", "CP_KEGG", "TFT_GTRD", "TFT_TFT_Legacy". Makes extensive use of the fgsea package. \href{https://www.biorxiv.org/content/10.1101/060012v3}{"Fast Gene Set Enrichment Analysis", Korotkevich et al bioRxiv 2021}. Ideally, GSEA should be used with the full result list.

@@ -223,6 +223,7 @@ fix_underflow <- function(scores,
 #' @param workernum integer, default 1, number of CPUs, parallelization occurs over the eight database categories, max is 8
 #' @param verbose T/F, default F, verbosity
 #' @param pwaycats string or character vector. List of pathway subcategories to run. it should match the column of `pathways$gs_subcat`. Default is: c("HALLMARK", "GO_BP", "GO_MF", "GO_CC", "CP_REACTOME", "CP_KEGG", "TFT_GTRD", "TFT_TFT_Legacy")
+#' @param filename_prefix string, default is empty. An optional string to add to all saved filenames, useful to open multiple tables later in excel.
 #'
 #' @return
 #' @export
@@ -236,7 +237,8 @@ deseq_to_gsea <- function(deseqres,
                           pathway_pval_thres = 1,
                           workernum = 1,
                           verbose = F,
-                          pwaycats = c("HALLMARK", "GO_BP", "GO_MF", "GO_CC", "CP_REACTOME", "CP_KEGG", "TFT_GTRD", "TFT_TFT_Legacy")
+                          pwaycats = c("HALLMARK", "GO_BP", "GO_MF", "GO_CC", "CP_REACTOME", "CP_KEGG", "TFT_GTRD", "TFT_TFT_Legacy"),
+                          filename_prefix = ''
                           
 ){
   
@@ -621,6 +623,11 @@ deseq_to_gsea <- function(deseqres,
     lapply( names(gseareslist) , function(cat){
       gseares <- gseareslist[[cat]]
       resfile <- paste0(outdir_tables, '/GSEA_results_', cat, '.csv')
+      
+      if(filename_prefix != ''){
+        paste0(outdir_tables, '/GSEA_results_', cat, '_', filename_prefix, '.csv')
+      }
+      
       write.csv(gseares, resfile, row.names = F)
       return(cat)
     })
@@ -788,6 +795,7 @@ gseares_dotplot <- function(gseares,
 #' @param plotprefix string, default is 'GSEA_Dotplot', will name each of the category dotplot files with this prefix, ie "GSEA_Dotplot_HALLMARK.pdf". If changed, no need to put a "_" at the end, it is added automatically
 #' @param pdfheight numeric, default 7
 #' @param pdfwidth numeric, default 7
+#' @param filename_prefix string, default is empty. An optional string to add to all saved filenames, useful to open multiple tables later in excel.
 #' @param ... other arguments passed to [CVRCpipelines::gseares_dotplot()]
 #'
 #' @return a list of ggplot dotplots
@@ -799,6 +807,7 @@ gseares_dotplot_listwrap <- function(gseareslist,
                                      plotprefix = 'GSEA_Dotplot',
                                      pdfheight=7, 
                                      pdfwidth=7, 
+                                     filename_prefix = '',
                                      ...){
   
   
@@ -815,6 +824,11 @@ gseares_dotplot_listwrap <- function(gseareslist,
     
     outdir_dp_l <- paste0(outdir, '/GSEA_Category_Dotplots/')
     dir.create(outdir_dp_l, recursive = T)
+    
+    
+    if(filename_prefix != ''){
+      plotprefix <- paste0(plotprefix, '_', filename_prefix)
+    }
     
     
     save_plotlist_suffix_listnames(plotfilename = plotprefix,
@@ -849,6 +863,7 @@ gseares_dotplot_listwrap <- function(gseareslist,
 #' @param min_pathway_gene_size integer, default 3, minimum number of genes in pathway to be considered for clustering
 #' @param num_input_sig_pathways_updn integer, default 250, max number of positive and negative NES pathways included, respectively. for example, when set to 250, 500 pathways maximum will be used, 250 positive and 250 negative
 #' @param outdir string, path to output directory, will create a subdir called "aPEAR"
+#' @param filename_prefix string, default is empty. An optional string to add to all saved filenames, useful to open multiple tables later in excel.
 #'
 #' @return
 #' @export
@@ -858,7 +873,8 @@ gsea_to_aPEAR_clusters <- function(gseareslist,
                                    aPEAR_cluster_min_size = 3,
                                    min_pathway_gene_size = 3,
                                    num_input_sig_pathways_updn = 250,
-                                   outdir
+                                   outdir,
+                                   filename_prefix = ''
                                    
                                    
 ){
@@ -987,6 +1003,12 @@ gsea_to_aPEAR_clusters <- function(gseareslist,
     
     #write it in the main outdir
     gdffile <- paste0(outdir, '/SignificantPathwaysTable_WithClusters.csv')
+    
+    if(filename_prefix != ''){
+      gdffile <- paste0(outdir, '/SignificantPathwaysTable_WithClusters_', filename_prefix, '.csv')
+    }
+    
+    
     write.csv(gdf, gdffile, row.names = F)
     
     apearoutlist_file <- paste0(outdir_apear, '/robject_apearlist.rds')
@@ -1051,6 +1073,7 @@ gsea_to_aPEAR_clusters <- function(gseareslist,
 #' @param fontSize numeric, default 2.7, cluster label font size
 #' @param pdfheight numeric, default 7
 #' @param pdfwidth numeric, default 10
+#' @param filename_prefix string, default is empty. An optional string to add to all saved filenames, useful to open multiple tables later in excel.
 #' @param ... other arguments passed to [aPEAR::plotPathClusters()]
 #'
 #' @return
@@ -1064,6 +1087,7 @@ plot_apear_clusters <- function(apearoutlist,
                                 fontSize = 2.7,
                                 pdfheight = 7,
                                 pdfwidth = 10,
+                                filename_prefix = '',
                                 ...
 ){
   
@@ -1105,6 +1129,11 @@ plot_apear_clusters <- function(apearoutlist,
     
     
     plotname <- paste0(outdir_apear_plot, '/aPEAR_GraphPlot')
+    
+    
+    if(filename_prefix != ''){
+      plotname <- paste0(plotname, '_', filename_prefix)
+    }
     
     
     
@@ -1160,6 +1189,7 @@ plot_apear_clusters <- function(apearoutlist,
 #' @param outdir string, path to output directory, will create a subdir called "aPEAR/aPEAR_ClusterPathways_Dotplots"
 #' @param pdfheight integer, default 7
 #' @param pdfwidth integer, default 7
+#' @param filename_prefix string, default is empty. An optional string to add to all saved filenames, useful to open multiple tables later in excel.
 #' @param ... other arguments passed to [CVRCpipelines::gseares_dotplot()]
 #'
 #' @return
@@ -1171,6 +1201,7 @@ plot_apear_cluster_pathway_dotplots <- function(
     outdir,
     pdfheight = 7,
     pdfwidth = 7, 
+    filename_prefix = '',
     ...
 ){
   
@@ -1226,6 +1257,10 @@ plot_apear_cluster_pathway_dotplots <- function(
     dir.create(outdir_apear_dotplots, recursive = T)
     
     plotprefix = 'Dotplot_aPEARcluster'
+    
+    if(filename_prefix != ''){
+      plotprefix <- paste0(plotprefix, '_', filename_prefix)
+    }
     
     
     

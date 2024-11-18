@@ -12,6 +12,7 @@ plot_apear_clusters(
   fontSize = 2.7,
   pdfheight = 7,
   pdfwidth = 10,
+  filename_prefix = "",
   ...
 )
 }
@@ -29,6 +30,8 @@ plot_apear_clusters(
 \item{pdfheight}{numeric, default 7}
 
 \item{pdfwidth}{numeric, default 10}
+
+\item{filename_prefix}{string, default is empty. An optional string to add to all saved filenames, useful to open multiple tables later in excel.}
 
 \item{...}{other arguments passed to \code{\link[aPEAR:plotPathClusters]{aPEAR::plotPathClusters()}}}
 }

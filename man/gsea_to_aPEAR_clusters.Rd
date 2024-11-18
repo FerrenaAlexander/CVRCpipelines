@@ -9,7 +9,8 @@ gsea_to_aPEAR_clusters(
   aPEAR_cluster_min_size = 3,
   min_pathway_gene_size = 3,
   num_input_sig_pathways_updn = 250,
-  outdir
+  outdir,
+  filename_prefix = ""
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ gsea_to_aPEAR_clusters(
 \item{num_input_sig_pathways_updn}{integer, default 250, max number of positive and negative NES pathways included, respectively. for example, when set to 250, 500 pathways maximum will be used, 250 positive and 250 negative}
 
 \item{outdir}{string, path to output directory, will create a subdir called "aPEAR"}
+
+\item{filename_prefix}{string, default is empty. An optional string to add to all saved filenames, useful to open multiple tables later in excel.}
 }
 \description{
 Using the gsea result list from \code{\link[=deseq_to_gsea]{deseq_to_gsea()}}, run aPEAR. \href{https://academic.oup.com/bioinformatics/article/39/11/btad672/7342237}{"Advanced Pathway Enrichment Analysis Representation", Kerseviciute and Gordevicius Bioinformatics 2023.}. Note many pathways may not be clustered due to uniqueness or being assigned to clusters below minimum cluster size.

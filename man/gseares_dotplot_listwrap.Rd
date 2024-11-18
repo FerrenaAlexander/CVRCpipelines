@@ -10,6 +10,7 @@ gseares_dotplot_listwrap(
   plotprefix = "GSEA_Dotplot",
   pdfheight = 7,
   pdfwidth = 7,
+  filename_prefix = "",
   ...
 )
 }
@@ -23,6 +24,8 @@ gseares_dotplot_listwrap(
 \item{pdfheight}{numeric, default 7}
 
 \item{pdfwidth}{numeric, default 7}
+
+\item{filename_prefix}{string, default is empty. An optional string to add to all saved filenames, useful to open multiple tables later in excel.}
 
 \item{...}{other arguments passed to \code{\link[=gseares_dotplot]{gseares_dotplot()}}}
 }
