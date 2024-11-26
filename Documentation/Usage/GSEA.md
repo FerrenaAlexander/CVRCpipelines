@@ -232,7 +232,7 @@ For other aPEAR questions, reach out to the authors of aPEAR.
 
 The pipeline is organized into the following modules, each with their own extensive documentation and flexible parameters with sensible defaults, run in order as below:
 
-0.  `preppathways_pathwayanalysis_crosscondition_module()` - Download the MSIGDB database and do some pruning and formatting. This function is a wrapper around the [msigdbr](https://cran.r-project.org/web/packages/msigdbr/index.html) package. This function is pulled directly from a package I wrote for single-cell RNAseq analysis called [scDAPP](https://cran.r-project.org/web/packages/msigdbr/index.html)
+0.  `preppathways_pathwayanalysis_crosscondition_module()` - Download the MSIGDB database and do some pruning and formatting. This function is a wrapper around the [msigdbr](https://cran.r-project.org/web/packages/msigdbr/index.html) package. This function is pulled directly from a package I wrote for single-cell RNAseq analysis called [scDAPP](https://github.com/bioinfoDZ/scDAPP)
 
 1.  `deseq_to_gsea()` - given DESeq2 results and pathways, find the enriched pathways.
 
