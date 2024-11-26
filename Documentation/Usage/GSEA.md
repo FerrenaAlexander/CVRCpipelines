@@ -10,13 +10,16 @@ The pipeline requires two inputs:
 
 2.  **Pathway / gene sets, ie from a database like MSIGDB** - a function to easily prepare this is also provided.
 
+<br>
+<br>
+
 ## Basic Pipeline overview
 
-GSEA is run to find enrichment in your DESeq2 resultof pathways / genesets from the MSIGDB.
+GSEA is run to find enrichment in your DESeq2 result of pathways / genesets from the MSIGDB.
 
 GSEA first ranks the genes, and then checks where the database-derived gene sets/pathways fall along the ranking. The ranking is thus important. This pipeline ranks genes as follows: **-log10(pvalue) \* sign(Log2FoldChange)**. The ranks are then sorted high to low. The ends of this list correspond the most significantly differentially expressed genes. GSEA works by randomizing the order, and comparing the random "expected" distribution of the pathway genes to the true "observed" ordered distribution. Pathways whose genes are distributed at one end of the list are considered *significantly enriched* and *significantly differentially expressed*.
 
-The Gene sets are drawn from a database called MSIGDB which is organized into various "categories" of pathways / genesets, including:
+The Gene sets are drawn from a database called the [Molecular Signatures DataBase (MSIGDB)](https://www.gsea-msigdb.org/gsea/msigdb) which is organized into various "categories" of pathways / genesets, including:
 
 -   the **Hallmarks** pathways (1);
 
@@ -28,11 +31,14 @@ The Gene sets are drawn from a database called MSIGDB which is organized into va
 
 -   and two gene set databases of Transcription Factor Targets (TFT); including the CHIP-seq based **"TFT GTRD"** (7), and the motif / predicted binding-based **"TFT Legacy"** (8) database.
 
-All eight (8) these are run by default in the pipeline separately.
+All eight (8) of these are run by default in the pipeline.
 
-After running GSEA for all eight categories, aPEAR is used to detected enriched networks of "functional modules" after joining the category results. Many pathways share a large intersect of gene members, and many pathways are truly involved in biological cross-talk. This analysis can identify broad molecular effects driven by specific sets of genes and reveal information about their upstream transcriptional regulation.
+After running GSEA for all eight categories, aPEAR is used to detected enriched networks of "functional modules" after. Many pathways share a large intersect of gene members, and many pathways are truly involved in biological cross-talk. This analysis can identify broad molecular effects driven by specific sets of genes and reveal information about their upstream transcriptional regulation.
 
 Various plotting visualizations are also provided, including dotplots for pathway-level enrichments and a network plot showing the aPEAR clusters.
+
+<br>
+<br>
 
 ## Quick start - whole pipeline wrapper
 
@@ -45,6 +51,8 @@ The pipeline is parallelized over "gene set categories", like the eight MSIGDB c
 Please note, the documentation of each function is extensive, please check the function details like so in R:
 
 `?CVRCpipelines::gsea_apear_pipeline()`
+
+<br>
 
 ### Prepare Inputs
 
@@ -60,6 +68,9 @@ Prepare DESeq2 result data.frame. All that is needed is something like this belo
 ```
 
 GSEA should be used with all detected genes, not just thresholded / significant DEGs.
+
+<br>
+
 
 ##### 2. Prepare the pathways
 
@@ -83,6 +94,8 @@ This function will save a .rds file in the outdir_int, which you can read into m
 ```         
 pathways <- readRDS("path/to/msigdb_file.rds")
 ```
+
+<br>
 
 ### Run the whole pipeline at once
 
@@ -120,7 +133,9 @@ The function will return a complex named list with all the main results. They ar
 
 More important than the output list, however, is the actual saved output.
 
-### check the saved outputs
+<br>
+
+### Check the saved outputs
 
 The outdir will look something like this:
 
@@ -161,10 +176,12 @@ The outputs consist of:
 
 Some important terminology:
 
-- NES: "Normalized Enrichment Score". This is the main "effect size" used for interpretation. It is a directional value usually between -3 to 3. The sign of the NES will match the sign of the Log2FC in terms of your experimental design.
+- "Normalized Enrichment Score" (NES). This is the main "effect size" of enrichment used for interpretation. It is a directional value usually between -3 to 3. The sign of the NES will match the sign of the DESeq2 Log2FC in terms of your experimental design.
 
 - Leading Edge: the genes that drive the enrichment of the pathway.
 
+
+<br>
 
 ## Common errors / issues
 
@@ -207,6 +224,9 @@ plot_apear_clusters(apear_obj, outdir = 'outdir')
 The plot and labels may still look weird. Sometimes, big clusters have their labels thrown half-way across the plot. I am not sure why this happens. You can try tweaking the parameters, turning off `repelLabels`, or just editing them with a PDF editor.
 
 For other aPEAR questions, reach out to the authors of aPEAR.
+
+<br>
+<br>
 
 ## Pipeline modules
 
