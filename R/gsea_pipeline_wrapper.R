@@ -13,7 +13,7 @@
 #' @param filename_prefix string, default is empty. An optional string to add to all saved filenames, useful to open multiple tables later in excel.
 #' @param ... Other parameters passed on to [CVRCpipelines::deseq_to_gsea]
 #'
-#' @return
+#' @return a list with elements containing outputs of all the modules
 #' @export
 #'
 #' @examples
@@ -23,8 +23,8 @@ gsea_apear_pipeline <- function(deseqres,
                                 aPEAR_cluster_min_size = 3,
                                 min_pathway_gene_size = 3,
                                 num_input_sig_pathways_updn = 250,
-                                verbose,
-                                workernum,
+                                verbose=F,
+                                workernum=1,
                                 filename_prefix = '',
                                 ...
                                 ){

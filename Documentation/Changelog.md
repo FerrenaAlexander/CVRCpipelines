@@ -3,6 +3,11 @@
 For all changes, please update changelog and use Year-Month-Day
 
 
+## 0.1.4
+2024.11.26
+- add defaults for `verbose` (F) and `workernum` (1) in the `gsea_apear_pipeline()` function
+- update docs of the `gsea_apear_pipeline()` function
+- add tutorial vignette for GSEA pipeline
 
 ## 0.1.3
 2024.11.18

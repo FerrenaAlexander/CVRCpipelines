@@ -11,8 +11,8 @@ gsea_apear_pipeline(
   aPEAR_cluster_min_size = 3,
   min_pathway_gene_size = 3,
   num_input_sig_pathways_updn = 250,
-  verbose,
-  workernum,
+  verbose = F,
+  workernum = 1,
   filename_prefix = "",
   ...
 )
@@ -37,6 +37,9 @@ gsea_apear_pipeline(
 \item{filename_prefix}{string, default is empty. An optional string to add to all saved filenames, useful to open multiple tables later in excel.}
 
 \item{...}{Other parameters passed on to \link{deseq_to_gsea}}
+}
+\value{
+a list with elements containing outputs of all the modules
 }
 \description{
 A wrapper pipeline function for GSEA pathway analysis and aPEAR clustering of enriched pathways, starting from differential expression (DE) summary statistics. Ideally, GSEA should be used with the full result list.
