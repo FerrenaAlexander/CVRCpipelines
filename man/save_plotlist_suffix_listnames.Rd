@@ -35,3 +35,25 @@ a list of files in the \code{plotdir}
 \description{
 given a named list of plots, save a pdf file for each list element
 }
+\examples{
+\dontrun{
+#set plotfilename, a string prefix
+plotfilename <- 'ScatterPlots'
+
+#set plotlist, a named list of plots, one pdf per list element;
+# if any element is itself a list, the pdf will have pages for each sublist element
+plotlist <- list(plot1 = plot(rnorm(100)), plot2 = plot(rnorm(100)))
+
+#set the output folder
+plotdir <- 'output_plots_will_go_here'
+
+#title_separator; a string character that separates the 
+# "plotfilename" prefix from the "plotlist" named list names
+# here, the plots will be named like "ScatterPlots_plot1.pdf" and "ScatterPlots_plot2.pdf"
+plotfilename = '_'
+
+CVRCpipelines::save_plotlist_suffix_listnames(plotfilename,
+                                              plotlist=plotlist,
+                                              plotdir=plotdir)
+}
+}

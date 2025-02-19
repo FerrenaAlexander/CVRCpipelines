@@ -14,6 +14,26 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' #set plotfilename, a string prefix
+#' plotfilename <- 'ScatterPlots'
+#' 
+#' #set plotlist, a named list of plots, one pdf per list element;
+#' # if any element is itself a list, the pdf will have pages for each sublist element
+#' plotlist <- list(plot1 = plot(rnorm(100)), plot2 = plot(rnorm(100)))
+#' 
+#' #set the output folder
+#' plotdir <- 'output_plots_will_go_here'
+#' 
+#' #title_separator; a string character that separates the 
+#' # "plotfilename" prefix from the "plotlist" named list names
+#' # here, the plots will be named like "ScatterPlots_plot1.pdf" and "ScatterPlots_plot2.pdf"
+#' plotfilename = '_'
+#' 
+#' CVRCpipelines::save_plotlist_suffix_listnames(plotfilename,
+#'                                               plotlist=plotlist,
+#'                                               plotdir=plotdir)
+#' }
 save_plotlist_suffix_listnames <- function(
     plotfilename,
     plotlist,
@@ -60,4 +80,159 @@ save_plotlist_suffix_listnames <- function(
   
   return(list.files(plotdir))
 }
+
+
+
+
+
+
+
+#' Quick one-line wrapper for saving pdf
+#'
+#' @param plotobject any storable plot object than can be printed to pdf (ie ggplot)
+#' @param filepath string, path to save to
+#' @param pdfheight numeric, height of pdf
+#' @param pdfwidth numeric, width of pdf
+#' @param automakedir T/F, default F, whether to detect the folder path from `filepath` and recursively create the dir or not, can be dangerous and messy if not careful
+#'
+#' @return
+#' @export
+#'
+#' @examples
+quickpdf <- function(plotobject, filepath, pdfheight=7, pdfwidth=7, automakedir=F){
+  
+  if(automakedir == F){
+    if(!dir.exists(dirname(filepath))){
+      stop('the folder of the input filepath seems to not be found: ', dirname(filepath) ) 
+    }
+  } else{
+    if(!dir.exists(dirname(filepath))){
+      warning('the folder of the input filepath seems to not be found: ', dirname(filepath), '\ncreating path and saving' ) 
+    }
+    dir.create(dirname(filepath), recursive = T)
+  }
+  
+  
+  graphics.off()
+  
+  pdf(filepath, height = pdfheight, width = pdfwidth)
+  
+  print(plotobject)
+  
+  graphics.off()
+  
+  
+}
+
+
+
+
+
+
+#' Map Celltypes to Clusters using single cell per-cell metadata data.frame
+#'
+#' @param celltype_cluster data.frame with two columns, celltype (factor) and cluster (factor) 
+#' @param cell_min_num integer, default 10, min number of cells for celltype to be considered among the cluster
+#' @param singlect_thres numeric 0 to 1, default 0.9. cutoff to assign a single celltype below this assign combined or just "Mixed"
+#' @param multict_lothres numeric 0 to 1, default 0.5, cutoff to assign multiple celltypes if none pass singlect_thres, below this just assign "Mixed"
+#'
+#' @return a vector of length equal to the number of clusters, with the mapping of celltype(s) for each cluster. Can be used with `plyr::mapvalues()` with from = levels(cluster) to assign a new column of metadata.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' #get md from serat obj
+#' md <- sobj@meta.data
+#' 
+#' #prep the input df
+#' celltype_cluster <- md[,c('Celltype', 'seurat_clusters')]
+#' 
+#' #make sure both are factorized
+#' celltype_cluster[,1] <- factor(celltype_cluster[,1])
+#' celltype_cluster[,2] <- factor(celltype_cluster[,2])
+#' 
+#' # run it
+#' celltype_cluster_mappedlevs <- celltype_cluster_map(celltype_cluster)
+#' 
+#' }
+celltype_cluster_map <- function(celltype_cluster, 
+                                 cell_min_num = 10,
+                                 singlect_thres = 0.9,
+                                 multict_lothres = 0.5
+){
+  
+  
+  
+  
+  #loop thru clusters and get prop of cells
+  clusts <- levels(celltype_cluster[,2])
+  ctv_l <- lapply(clusts, function(cl){
+    
+    #get this cluster metadata
+    ccc <- celltype_cluster[celltype_cluster[,2] == cl,]
+    
+    #get table vector
+    ctv <- table(ccc[,1])
+    
+    #sort, remove zeros
+    ctv <- ctv[ctv>0]
+    ctv <- sort(ctv,decreasing = T)
+    
+    #cluster must have at least 10 cells?
+    # celltype must contribute at lest cell_min_num cells
+    ctv_cut <- ctv[ctv>cell_min_num]
+    
+    #get prop
+    ctv <- ctv/sum(ctv)
+    
+    #filter pfull props by min cell cutoff
+    ctv <- ctv[names(ctv) %in% names(ctv_cut)]
+    
+    #return ctv so we can see how it looks...
+    
+    return(ctv)
+    
+    
+  })
+  names(ctv_l) <- paste0('Cluster_', clusts)
+  
+  #based on prop of cells, try to assign celltype
+  # if first is above 0.9 (singlect_thres), assign 
+  # if first is below 0.9, try to assign any with more than 0.1 (multict_lothres)
+  ctmapping <- sapply(clusts, function(cl){
+    clustlab <- paste0('Cluster_', cl)
+    
+    ctv <- ctv_l[[clustlab]]
+    
+    #if above single cutoff thres, just pick it as celltype
+    if(ctv[1] >= singlect_thres){
+      cm <- names(ctv)[1]
+    }
+    
+    #if below thres, use a combination of celltypes
+    
+    if(ctv[1] < singlect_thres){
+      
+      ctv <- ctv[ctv>multict_lothres]
+      cm <- names(ctv)
+      cm <- paste(cm, collapse = '_')
+      
+      #sometimes, no cell types pass 50%, just call it mixed
+      if( cm == '' ){cm = 'Mixed'}
+    }
+    
+    cm <- paste0(clustlab, '--', cm)
+    
+    
+    
+  })
+  
+  return(ctmapping)
+  
+}
+
+
+
+
+
 

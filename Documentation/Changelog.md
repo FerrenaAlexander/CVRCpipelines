@@ -2,6 +2,12 @@
 
 For all changes, please update changelog and use Year-Month-Day
 
+## 0.1.5
+2025.02.19
+- add `quickpdf()` function
+- add my celltype clustering function `celltype_cluster_map()` (developed for a prior project still unpublished)
+- update docs for `save_plotlist_suffix_listnames()` function
+- suggest a fix for installing aPEAR from cran archive
 
 ## 0.1.4
 2024.11.26
