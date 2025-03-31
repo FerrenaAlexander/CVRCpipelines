@@ -550,7 +550,7 @@ deseq_to_gsea <- function(deseqres,
     gseares <- gseares[order(gseares$NES, decreasing = T),]
     
     #apply cutoff of pathway_pval_thres, then pathway_padj_thres
-    gseares <- gseares[gseares$padj < pathway_pval_thres, ,drop=F]
+    gseares <- gseares[gseares$pval < pathway_pval_thres, ,drop=F]
     gseares <- gseares[gseares$padj < pathway_padj_thres, ,drop=F]
     
     #select pathways with more than just 1 gene in the list
@@ -718,6 +718,12 @@ gseares_dotplot <- function(gseares,
   
   gseares_plot <- gseares
   
+  #update 2025.03.31; do this before cutoff
+  # #make sure order is by -log(padj) * NES# update; do this before filtering
+  gseares_plot$weight <- -log(gseares_plot$padj) * sign(gseares_plot$NES)
+  gseares_plot <- gseares_plot[order(gseares_plot$weight, decreasing = T),]
+  gseares_plot$pathway <- factor(gseares_plot$pathway, levels = rev(gseares_plot$pathway)  )
+  
   
   #if more than 20 ,select just 20
   gseares_plot <- rbind( head( gseares_plot[gseares_plot$NES>0,,drop=F], n_up) ,
@@ -743,10 +749,10 @@ gseares_dotplot <- function(gseares,
   #make pathway names more readable by splitting long ones to multiple lines
   gseares_plot$pathway <- stringr::str_wrap(gseares_plot$pathway, width = line_char_width)
   
-  #make sure order is by -log(padj) * NES
-  gseares_plot$weight <- -log(gseares_plot$padj) * sign(gseares_plot$NES)
-  gseares_plot <- gseares_plot[order(gseares_plot$weight, decreasing = T),]
-  gseares_plot$pathway <- factor(gseares_plot$pathway, levels = rev(gseares_plot$pathway)  )
+  # #make sure order is by -log(padj) * NES# update; do this before filtering
+  # gseares_plot$weight <- -log(gseares_plot$padj) * sign(gseares_plot$NES)
+  # gseares_plot <- gseares_plot[order(gseares_plot$weight, decreasing = T),]
+  # gseares_plot$pathway <- factor(gseares_plot$pathway, levels = rev(gseares_plot$pathway)  )
   
   
   #plot it

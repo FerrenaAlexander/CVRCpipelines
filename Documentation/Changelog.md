@@ -2,6 +2,11 @@
 
 For all changes, please update changelog and use Year-Month-Day
 
+## 0.1.6
+2025.03.31 - bugfixes
+- `pathway_pval_thres` argument in main GSEA function now applies cutoff to pval column (previously applied at padj column)
+- `gseares_dotplot()` now sorts the pathways by -log10(padj) * sign(nes) before filtering the top/bottom few; main effect in the default wrapper is that the apear cluster dotplots show stronger pathways now 
+
 ## 0.1.5
 2025.02.19
 - add `quickpdf()` function
