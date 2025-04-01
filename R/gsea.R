@@ -720,12 +720,13 @@ gseares_dotplot <- function(gseares,
   
   #update 2025.03.31; do this before cutoff
   # #make sure order is by -log(padj) * NES# update; do this before filtering
-  gseares_plot$weight <- -log(gseares_plot$padj) * sign(gseares_plot$NES)
+  gseares_plot$weight <- (-log(gseares_plot$padj)) * sign(gseares_plot$NES)
   gseares_plot <- gseares_plot[order(gseares_plot$weight, decreasing = T),]
-  gseares_plot$pathway <- factor(gseares_plot$pathway, levels = rev(gseares_plot$pathway)  )
+  # gseares_plot$pathway <- factor(gseares_plot$pathway, levels = rev(gseares_plot$pathway)  )
   
   
   #if more than 20 ,select just 20
+  gseares <- gseares_plot #overwrite this; this is important for later...
   gseares_plot <- rbind( head( gseares_plot[gseares_plot$NES>0,,drop=F], n_up) ,
                          tail( gseares_plot[gseares_plot$NES<0,,drop=F], n_dn) )
   
@@ -733,9 +734,11 @@ gseares_dotplot <- function(gseares,
   #also look for and include the include_pways
   if(!missing(include_pways)){
     
+    
+    
     gseares_plot <- rbind(gseares_plot,
                           gseares[gseares$pathway %in% include_pways,]
-                          )
+    )
     
     #make sure no dups
     gseares_plot <- gseares_plot[!duplicated(gseares_plot$pathway),]
@@ -749,10 +752,12 @@ gseares_dotplot <- function(gseares,
   #make pathway names more readable by splitting long ones to multiple lines
   gseares_plot$pathway <- stringr::str_wrap(gseares_plot$pathway, width = line_char_width)
   
-  # #make sure order is by -log(padj) * NES# update; do this before filtering
-  # gseares_plot$weight <- -log(gseares_plot$padj) * sign(gseares_plot$NES)
-  # gseares_plot <- gseares_plot[order(gseares_plot$weight, decreasing = T),]
-  # gseares_plot$pathway <- factor(gseares_plot$pathway, levels = rev(gseares_plot$pathway)  )
+  # #make sure order is by -log(padj) * NES# update; do this before filtering now
+  ## REPEAT IT HERE TO MAKE SURE FACTOR IS WORKING PROPERLY
+  gseares_plot$weight <- -log(gseares_plot$padj) * sign(gseares_plot$NES)
+  gseares_plot <- gseares_plot[order(gseares_plot$weight, decreasing = T),]
+  gseares_plot$pathway <- factor(gseares_plot$pathway, levels = rev(gseares_plot$pathway)  )
+  
   
   
   #plot it
