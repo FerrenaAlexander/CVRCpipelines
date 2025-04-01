@@ -716,17 +716,18 @@ gseares_dotplot <- function(gseares,
   
   
   
-  gseares_plot <- gseares
+
   
   #update 2025.03.31; do this before cutoff
   # #make sure order is by -log(padj) * NES# update; do this before filtering
-  gseares_plot$weight <- (-log(gseares_plot$padj)) * sign(gseares_plot$NES)
-  gseares_plot <- gseares_plot[order(gseares_plot$weight, decreasing = T),]
+  gseares$weight <- (-log(gseares$padj)) * sign(gseares$NES)
+  gseares <- gseares[order(gseares$weight, decreasing = T),]
   # gseares_plot$pathway <- factor(gseares_plot$pathway, levels = rev(gseares_plot$pathway)  )
   
   
   #if more than 20 ,select just 20
-  gseares <- gseares_plot #overwrite this; this is important for later...
+  # gseares <- gseares_plot #overwrite this; this is important for later...
+  gseares_plot <- gseares
   gseares_plot <- rbind( head( gseares_plot[gseares_plot$NES>0,,drop=F], n_up) ,
                          tail( gseares_plot[gseares_plot$NES<0,,drop=F], n_dn) )
   
