@@ -1,10 +1,10 @@
-Package: CVRCpipelines
-Title: Tools for HTS analysis
+Package: GSEA_aPEAR_Wrapper
+Title: Wrapper for GSEA and package clustering
 Version: 0.1.6
 Authors@R: 
     person("Alexander", "Ferrena", , "alexanderferrena@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-9578-8683"))
-Description: Tools for HTS analysis
+Description: Wrapper for GSEA and package clustering
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

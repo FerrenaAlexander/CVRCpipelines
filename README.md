@@ -19,7 +19,7 @@ remotes::install_url('https://cran.r-project.org/src/contrib/Archive/aPEAR/aPEAR
 Install this package
 ```
 # install.packages("devtools")
-devtools::install_github("FerrenaAlexander/CVRCpipelines")
+devtools::install_github("FerrenaAlexander/GSEA_aPEAR_Wrapper")
 ```
 
 <br>
