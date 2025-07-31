@@ -2,6 +2,13 @@
 
 For all changes, please update changelog and use Year-Month-Day
 
+## 0.2.0
+2025.07.31 - bugfixes
+- fix the `preppathways_pathwayanalysis_crosscondition_module()` function to match the fix in scDAPP. This is because the "msigdbr" package (used to query pathway gene sets from MSIGDB) changed in format a lot.
+- this repo was switched to "https://github.com/CVRC-Bioinformatics/GSEA_aPEAR_Wrapper" but this was inconvenient, so it is back to its old name and location.
+- Fix an issue in `deseq_to_gsea()` where "pathway_pval_thres" and "pathway_padj_thres" filter out results even when set to 1 (ie via filtering on < 1). Instead we can now set them to Inf. If "pathway_pval_thres" is set to anything but Inf (used to be 1), "pathway_padj_thres" is set to Inf (used to be 1). This is useful if results from the entire MSIGDB database gene sets are desired.
+
+
 ## 0.1.6
 2025.04.01 - bugfixes
 - `pathway_pval_thres` argument in main GSEA function now applies cutoff to pval column (previously applied at padj column)

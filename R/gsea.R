@@ -234,8 +234,8 @@ fix_underflow <- function(scores,
 #' @param gene_identifier_type string, default "gene_symbol", column name of gene identifiers. must be one of 'gene_symbol', 'gene_name', 'ensembl_gene', 'entrez_gene'. if 'gene_name' is passed, it will create and use 'gene_symbol'
 #' @param pathways data.frame of pathways, output of [CVRCpipelines::preppathways_pathwayanalysis_crosscondition_module()], recommend you run this once and store use the pathways the way you would for a reference genome. Minimally, this is a data.frame where each row is a gene and the pathwy it is part of, with the following column names: "gs_name", the pathways; "gs_subcat", the categories/MSIGDB sub-categories of the pathways; and a column matching the parameter `gene_identifier_type`, such as "gene_symbol" for the genes in each pathway
 #' @param outdir string, path to output directory. will create a subdir called "GSEA_tables"
-#' @param pathway_padj_thres numeric, default 0.1, alpha for adjusted pvalue threshold for gsea pathways
-#' @param pathway_pval_thres numeric, default 1, alpha for nominal pvalue threshold for gsea pathways, normally not used. if set to any value other than 1, then pathway_padj_thres will be set to 1. 
+#' @param pathway_padj_thres numeric, default 0.1, alpha for adjusted pvalue threshold for gsea pathways. Set to Inf (without quotes) to ignore the padj filter.
+#' @param pathway_pval_thres numeric, default Inf, alpha for nominal pvalue threshold for gsea pathways, normally not used. If set to any value other than Inf, then pathway_padj_thres will be set to Inf. 
 #' @param workernum integer, default 1, number of CPUs, parallelization occurs over the eight database categories, max is 8
 #' @param verbose T/F, default F, verbosity
 #' @param pwaycats string or character vector. List of pathway subcategories to run. it should match the column of `pathways$gs_subcat`. Default is: c("HALLMARK", "GO_BP", "GO_MF", "GO_CC", "CP_REACTOME", "CP_KEGG", "TFT_GTRD", "TFT_TFT_Legacy")
@@ -250,7 +250,7 @@ deseq_to_gsea <- function(deseqres,
                           pathways,
                           outdir,
                           pathway_padj_thres = 0.1,
-                          pathway_pval_thres = 1,
+                          pathway_pval_thres = Inf,
                           workernum = 1,
                           verbose = F,
                           pwaycats = c("HALLMARK", "GO_BP", "GO_MF", "GO_CC", "CP_REACTOME", "CP_KEGG", "TFT_GTRD", "TFT_TFT_Legacy"),
@@ -413,11 +413,12 @@ deseq_to_gsea <- function(deseqres,
   
   
   #if using pval thres, do not use padj thres
+  # update 2025.07.31; set this to inf instead of 1 otherwise pathways get filtered out
   
-  if(pathway_pval_thres != 1){
+  if(pathway_pval_thres != Inf){
     
-    
-    pathway_padj_thres <- 1
+    # update 2025.07.31; set this to inf instead of 1 otherwise pathways get filtered out
+    pathway_padj_thres <- Inf
     
     
   }
@@ -570,7 +571,8 @@ deseq_to_gsea <- function(deseqres,
     gseares <- gseares[gseares$padj < pathway_padj_thres, ,drop=F]
     
     #select pathways with more than just 1 gene in the list
-    gseares <- gseares[gseares$size > 2,,drop=F]
+    # do not apply this filter; we will filter this in aPEAR anyway
+    # gseares <- gseares[gseares$size > 2,,drop=F]
     
     #add the category, if there are any rows at all...
     if( nrow(gseares) > 0 ){

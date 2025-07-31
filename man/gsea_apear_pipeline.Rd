@@ -26,7 +26,7 @@ gsea_apear_pipeline(
 
 \item{aPEAR_cluster_min_size}{integer, default 3, minimum aPEAR cluster size after clustering the pathways}
 
-\item{min_pathway_gene_size}{integer, default 3, minimum number of genes in pathway to be considered for clustering}
+\item{min_pathway_gene_size}{integer, default 3, minimum number of genes in pathway to be considered for clustering. Note: This does not filter the pathway result tables by gene size, it is just used to select with pathways to consider in aPEAR clustering.}
 
 \item{num_input_sig_pathways_updn}{integer, default 250, max number of positive and negative NES pathways included, respectively. for example, when set to 250, 500 pathways maximum will be used, 250 positive and 250 negative}
 

@@ -10,7 +10,7 @@ deseq_to_gsea(
   pathways,
   outdir,
   pathway_padj_thres = 0.1,
-  pathway_pval_thres = 1,
+  pathway_pval_thres = Inf,
   workernum = 1,
   verbose = F,
   pwaycats = c("HALLMARK", "GO_BP", "GO_MF", "GO_CC", "CP_REACTOME", "CP_KEGG",
@@ -27,9 +27,9 @@ deseq_to_gsea(
 
 \item{outdir}{string, path to output directory. will create a subdir called "GSEA_tables"}
 
-\item{pathway_padj_thres}{numeric, default 0.1, alpha for adjusted pvalue threshold for gsea pathways}
+\item{pathway_padj_thres}{numeric, default 0.1, alpha for adjusted pvalue threshold for gsea pathways. Set to Inf (without quotes) to ignore the padj filter.}
 
-\item{pathway_pval_thres}{numeric, default 1, alpha for nominal pvalue threshold for gsea pathways, normally not used. if set to any value other than 1, then pathway_padj_thres will be set to 1.}
+\item{pathway_pval_thres}{numeric, default Inf, alpha for nominal pvalue threshold for gsea pathways, normally not used. If set to any value other than Inf, then pathway_padj_thres will be set to Inf.}
 
 \item{workernum}{integer, default 1, number of CPUs, parallelization occurs over the eight database categories, max is 8}
 

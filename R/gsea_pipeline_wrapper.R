@@ -6,7 +6,7 @@
 #' @param pathways data.frame of pathways, output of [CVRCpipelines::preppathways_pathwayanalysis_crosscondition_module()], recommend you run this once and store use the pathways the way you would for a reference genome. Minimally, this is a data.frame where each row is a gene and the pathwy it is part of, with the following column names: "gs_name", the pathways; "gs_subcat", the categories/MSIGDB sub-categories of the pathways; and a column matching the parameter `gene_identifier_type`, such as "gene_symbol" for the genes in each pathway
 #' @param outdir string, path to output directory. Will write result tables and plots to subdirectories inside of here. 
 #' @param aPEAR_cluster_min_size integer, default 3, minimum aPEAR cluster size after clustering the pathways
-#' @param min_pathway_gene_size integer, default 3, minimum number of genes in pathway to be considered for clustering
+#' @param min_pathway_gene_size integer, default 3, minimum number of genes in pathway to be considered for clustering. Note: This does not filter the pathway result tables by gene size, it is just used to select with pathways to consider in aPEAR clustering.
 #' @param num_input_sig_pathways_updn integer, default 250, max number of positive and negative NES pathways included, respectively. for example, when set to 250, 500 pathways maximum will be used, 250 positive and 250 negative
 #' @param verbose T/F, default F
 #' @param workernum integer, default 1, number of CPUs, parallelization occurs over the default database categories, so max is set to 8
