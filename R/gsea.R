@@ -571,7 +571,7 @@ deseq_to_gsea <- function(deseqres,
     gseares <- gseares[gseares$padj < pathway_padj_thres, ,drop=F]
     
     #select pathways with more than just 1 gene in the list
-    # do not apply this filter; we will filter this in aPEAR anyway
+    # update 2025.07.31; do not apply this filter; we will filter this in aPEAR anyway
     # gseares <- gseares[gseares$size > 2,,drop=F]
     
     #add the category, if there are any rows at all...
