@@ -1,4 +1,4 @@
-Package: GSEA_aPEAR_Wrapper
+Package: CVRCpipelines
 Title: Wrapper for GSEA and package clustering
 Version: 0.1.6
 Authors@R: 
