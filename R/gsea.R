@@ -1,11 +1,11 @@
 #' Prep MSIGDB pathways for pathway analysis
 #'
-#' Prep pathways from MSIGDB via the msigdbr package. We include the Hallmarks category; Gene Ontology BP, MF and CC; Reactome; KEGG; transcription factor CHIP-seq targets in the Gene Transcription Regulation Database (TFT_GTRD); inferred transcription factor targets via motif analysis from Xie et al Nature 2005 (TFT_Legacy). Only gene sets with < 500 genes are included. This function is identical to the scDAPP prep_pathways function.
+#' This is a modular component of the scRNAseq analysis pipeline. Prep pathways from MSIGDB via the msigdbr package. We include the Hallmarks category; Gene Ontology BP, MF and CC; Reactome; KEGG; transcription factor CHIP-seq targets in the Gene Transcription Regulation Database (TFT_GTRD); inferred transcription factor targets via motif analysis from Xie et al Nature 2005 (TFT_Legacy). Only gene sets with < 500 genes are included.
 #'
 #' @param species string, species such as "Homo sapeins" or "Mus musculus"
 #' @param outdir_int string, directory to save pathways to. Will create a sub-directory called "pathwayanalysis_crosscondition" and save inside of there. We save pathways since the database updates over time.
 #'
-#' @return a data.frame similar to the output of [msigdbr::msigdbr()], but filtering for some specific categories / subcategories.
+#' @return a data.frame similar to the output of `msigdbr::msigdbr`, but filtering for some specific categories / subcategories.
 #' @export
 #'
 #' @examples
@@ -20,42 +20,58 @@ preppathways_pathwayanalysis_crosscondition_module <- function(species,
   
   
   require(msigdbr)
+  # require(msigdbf)
   
+  #prep the pathways
+  # make sure to save it. database can update over time
+  pwayoutdir <- paste0(outdir_int, '/pathwayanalysis_crosscondition/')
+  dir.create(pwayoutdir, recursive = T)
   
-  if( !missing(outdir_int) ) {
+  #read if already there
+  if( file.exists( paste0(pwayoutdir, '/msigdb_pathways.rds') ) ){
     
-    #prep the pathways
-    # make sure to save it. database can update over time
-    pwayoutdir <- paste0(outdir_int, '/pathwayanalysis_crosscondition/')
-    dir.create(pwayoutdir, recursive = T)
-    
-    
-    if( !file.exists( paste0(pwayoutdir, '/msigdb_pathways.rds') ) ){
-      
-      message('Accessing MSIGDBR database')
-      pathways <- msigdbr::msigdbr(species = species)
-      
-      #replace : with _ in actual pathway names:
-      pathways$gs_subcat <- gsub(':', '_', pathways$gs_subcat)
-      
-      # saveRDS(pathways, paste0(pwayoutdir, '/msigdb_pathways.rds') )
-      
-    } else{
-      message('Reading cached msigdbr pathways')
-      pathways <- readRDS(paste0(pwayoutdir, '/msigdb_pathways.rds') )
-    }
+    message('Reading cached msigdbr pathways')
+    pathways <- readRDS(paste0(pwayoutdir, '/msigdb_pathways.rds') )
     
     
   }
-  else{
+  
+  
+  
+  message('Accessing MSIGDBR database')
+  
+  #read pathways
+  pathways <- msigdbr::msigdbr(species = species)
+  
+  
+  
+  ## 2025.03.31: MSIGDB V10 was released in mid march 2025. it changed the format a lot. 
+  # I think for now we can just add the old column names; gs_subcat and gs_cat
+  #check if the old columns names are in; if not, add the new columns as the old
+  msigdbrcolnames <- colnames(pathways)
+  if( any(!c('gs_subcat', 'gs_cat') %in% msigdbrcolnames) ){
     
-    message('Accessing MSIGDBR database')
-    #read pathways
-    pathways <- msigdbr::msigdbr(species = species)
+    pathways$gs_cat <- pathways$gs_collection
+    pathways$gs_subcat <- pathways$gs_subcollection
     
-    #replace : with _ in actual pathway names:
+    
+    #for ease, do this here..
     pathways$gs_subcat <- gsub(':', '_', pathways$gs_subcat)
+    
+    ## replace "TFT_TFT_LEGACY" with "TFT_TFT_Legacy", as per the old name...
+    pathways[pathways$gs_subcat == 'TFT_TFT_LEGACY', "gs_subcat"] <- 'TFT_TFT_Legacy'
+    
+    #they added a new kegg medicus and old kegg is now kegg_legacy; set the kegg_legacy as CP_KEGG as before
+    pathways[pathways$gs_subcat == 'CP_KEGG_LEGACY', "gs_subcat"] <- 'CP_KEGG'
+    
   }
+  
+  
+  #replace : with _ in actual pathway names:
+  pathways$gs_subcat <- gsub(':', '_', pathways$gs_subcat)
+  
+  
+  
   
   
   #### picking default categories
