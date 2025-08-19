@@ -2,6 +2,10 @@
 
 For all changes, please update changelog and use Year-Month-Day
 
+## 0.2.1
+2025.08.19
+- add `quickpng()` function
+
 ## 0.2.0
 2025.07.31 - bugfixes
 - fix the `preppathways_pathwayanalysis_crosscondition_module()` function to match the fix in scDAPP. This is because the "msigdbr" package (used to query pathway gene sets from MSIGDB) changed in format a lot.

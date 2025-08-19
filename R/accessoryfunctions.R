@@ -126,6 +126,60 @@ quickpdf <- function(plotobject, filepath, pdfheight=7, pdfwidth=7, automakedir=
 
 
 
+#' Quick one-line wrapper for saving png
+#'
+#' @param plotobject any storable plot object than can be printed to pdf (ie ggplot)
+#' @param filepath string, path to save to
+#' @param plotheight numeric, height of plot file in units, default 7
+#' @param plotwidth numeric, height of plot file in units, default 7
+#' @param units string, default 'in', see `?png`
+#' @param automakedir T/F, default F, whether to detect the folder path from `filepath` and recursively create the dir or not, can be dangerous and messy if not careful
+#' @param pdfheight numeric, holdover from other plotting functions, will transfer to plotheight
+#' @param pdfwidth numeric, holdover from other plotting functions, will transfer to plotwidth
+#'
+#' @return
+#' @export
+#'
+#' @examples
+quickpng <- function(plotobject, filepath, plotheight=7, plotwidth=7, automakedir=F, pdfheight=NULL, pdfwidth=NULL, units='in'){
+  
+  
+  if(!is.null(pdfheight)){
+    warning('For PNG use plotheight and plotwidth, not pdfheight and pdfwidth. \nSetting plotheight<-pdfheight')
+    plotheight <- pdfheight
+  }
+  if(!is.null(pdfwidth)){
+    warning('For PNG use plotheight and plotwidth, not pdfheight and pdfwidth. \nSetting plotwidth<-pdfwidth')
+    plotwidth <- pdfwidth
+  }
+  
+  
+  
+  if(automakedir == F){
+    if(!dir.exists(dirname(filepath))){
+      stop('the folder of the input filepath seems to not be found: ', dirname(filepath) ) 
+    }
+  } else{
+    if(!dir.exists(dirname(filepath))){
+      warning('the folder of the input filepath seems to not be found: ', dirname(filepath), '\ncreating path and saving' ) 
+    }
+    dir.create(dirname(filepath), recursive = T)
+  }
+  
+  
+  graphics.off()
+  
+  png(filepath, height = plotheight, width = plotwidth, units = units)
+  
+  print(plotobject)
+  
+  graphics.off()
+  
+  
+}
+
+
+
 
 
 
@@ -234,5 +288,29 @@ celltype_cluster_map <- function(celltype_cluster,
 
 
 
-
-
+## code for initiating parallel threads, but maybe this is not really necessary
+# initiate_parallel_threads <- function(workernum = 1,
+#                                       verbose=T){
+#   
+#   
+#   require(foreach)
+#   require(doParallel)
+#   require(parallel)
+#   
+#   
+#   
+#   ## initiate parallelization
+#   cl <- parallel::makeCluster(workernum)
+#   doParallel::registerDoParallel(cl)
+#   
+#   
+#   
+#   message('\nParallelization intitiated with workernum = ', workernum,
+#           '\nTo stop it, please run:\n',
+#           '"parallel::stopCluster(cl)"'
+#           )
+#   
+#   
+#   return(cl)
+#   
+# }

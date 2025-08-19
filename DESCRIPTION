@@ -1,6 +1,6 @@
 Package: CVRCpipelines
 Title: Wrapper for GSEA and package clustering
-Version: 0.2.0
+Version: 0.2.1
 Authors@R: 
     person("Alexander", "Ferrena", , "alexanderferrena@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-9578-8683"))
