@@ -133,6 +133,7 @@ quickpdf <- function(plotobject, filepath, pdfheight=7, pdfwidth=7, automakedir=
 #' @param plotheight numeric, height of plot file in units, default 7
 #' @param plotwidth numeric, height of plot file in units, default 7
 #' @param units string, default 'in', see `?png`
+#' @param res numeric, default 300, see `?png`
 #' @param automakedir T/F, default F, whether to detect the folder path from `filepath` and recursively create the dir or not, can be dangerous and messy if not careful
 #' @param pdfheight numeric, holdover from other plotting functions, will transfer to plotheight
 #' @param pdfwidth numeric, holdover from other plotting functions, will transfer to plotwidth
@@ -141,7 +142,7 @@ quickpdf <- function(plotobject, filepath, pdfheight=7, pdfwidth=7, automakedir=
 #' @export
 #'
 #' @examples
-quickpng <- function(plotobject, filepath, plotheight=7, plotwidth=7, automakedir=F, pdfheight=NULL, pdfwidth=NULL, units='in'){
+quickpng <- function(plotobject, filepath, plotheight=7, plotwidth=7, automakedir=F, pdfheight=NULL, pdfwidth=NULL, units='in', res=300){
   
   
   if(!is.null(pdfheight)){
@@ -169,7 +170,7 @@ quickpng <- function(plotobject, filepath, plotheight=7, plotwidth=7, automakedi
   
   graphics.off()
   
-  png(filepath, height = plotheight, width = plotwidth, units = units)
+  png(filepath, height = plotheight, width = plotwidth, units = units, res=res)
   
   print(plotobject)
   

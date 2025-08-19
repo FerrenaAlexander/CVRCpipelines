@@ -12,7 +12,8 @@ quickpng(
   automakedir = F,
   pdfheight = NULL,
   pdfwidth = NULL,
-  units = "in"
+  units = "in",
+  res = 300
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ quickpng(
 \item{pdfwidth}{numeric, holdover from other plotting functions, will transfer to plotwidth}
 
 \item{units}{string, default 'in', see \code{?png}}
+
+\item{res}{numeric, default 300, see \code{?png}}
 }
 \description{
 Quick one-line wrapper for saving png
