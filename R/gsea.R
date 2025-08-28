@@ -240,6 +240,7 @@ fix_underflow <- function(scores,
 #' @param verbose T/F, default F, verbosity
 #' @param pwaycats string or character vector. List of pathway subcategories to run. it should match the column of `pathways$gs_subcat`. Default is: c("HALLMARK", "GO_BP", "GO_MF", "GO_CC", "CP_REACTOME", "CP_KEGG", "TFT_GTRD", "TFT_TFT_Legacy")
 #' @param filename_prefix string, default is empty. An optional string to add to all saved filenames, useful to open multiple tables later in excel.
+#' @param preweightcolumn string, default is empty. Optionally, the user may provide a string denoting the column name of `deseqres` containing a pre-computed per-gene score to rank gene input to GSEA by, for example, "z.std" from the "dream" package (Hoffman Bioinformatics 2021)
 #'
 #' @return
 #' @export
@@ -254,7 +255,8 @@ deseq_to_gsea <- function(deseqres,
                           workernum = 1,
                           verbose = F,
                           pwaycats = c("HALLMARK", "GO_BP", "GO_MF", "GO_CC", "CP_REACTOME", "CP_KEGG", "TFT_GTRD", "TFT_TFT_Legacy"),
-                          filename_prefix = ''
+                          filename_prefix = '',
+                          preweightcolumn
                           
 ){
   
@@ -366,6 +368,9 @@ deseq_to_gsea <- function(deseqres,
   
   
   
+  
+  
+  
   # check number of genes from deseqres that are in the database
   
   tab <- table(deseqres[,gene_identifier_type] %in% pathways[,gene_identifier_type])
@@ -425,6 +430,17 @@ deseq_to_gsea <- function(deseqres,
   
   
   
+  # UPDATE 2025.08.28: ADD PREWEIGHTCOLUMN: check preweight column in GSEA
+  if(!is.null(preweightcolumn)){
+    
+    if(!preweightcolumn %in% colnames(deseqres)){
+      stop('preweightcolumn was passed with value: "', preweightcolumn, '", but this is missing from colnames(deseqres)')
+    }
+    
+  }
+  
+  
+  
   ###################### End Input Exceptions   ###################### 
   
   
@@ -456,31 +472,71 @@ deseq_to_gsea <- function(deseqres,
   
   ## prep weighted list ##
   
-  #we have to deal with underflow...
-  # get -log10 pvalues, sort
-  scores <- -log10(res$pvalue)
-  scores <- scores * sign(res$log2FoldChange)
-  names(scores) <- res[,gene_identifier_type]
-  
-  #sort by log pval with names
-  scores <- sort(scores,decreasing = T)
-  
-  
-  #also get logFC vector; for INf, we will sort them by LFC...
-  logFC_vec <- res$log2FoldChange; names(logFC_vec) <- res[,gene_identifier_type]
-  
-  
-  # fix the underflow...
-  scores <- CVRCpipelines::fix_underflow(scores, logFC_vec, verbose = verbose)
-  
-  
-  
-  #make sure scores is in order of genes
-  scores <- scores[match(res[,gene_identifier_type], names(scores))]
-  
-  
-  #add to res
-  res$weight <- scores
+  # UPDATE 2025.08.28: ADD PREWEIGHTCOLUMN: check preweight column in GSEA
+  if(is.null(preweightcolumn)){
+    
+    
+    
+    ### UPDATE 2025.08.28: CHECK FOR NAs:
+    if( any(is.na(res$log2FoldChange) | is.na(res$pvalue)) ){
+      
+      
+      if(any(is.na(res$log2FoldChange) )){
+        warning('NAs detected in deseqres$log2FoldChange! Removing...')
+      }
+      
+      if(any(is.na(res$pvalue) )){
+        warning('NAs detected in deseqres$pvalue! Removing...')
+      }
+      
+      res <- res[!is.na(res$pvalue),]
+      res <- res[!is.na(res$log2FoldChange),]
+      
+      if(nrow(res)==0){
+        stop('NA removal removed all genes... Inspect inputs carefully')
+      }
+      
+      
+    }
+    
+    
+    
+    #we have to deal with underflow...
+    # get -log10 pvalues, sort
+    scores <- -log10(res$pvalue)
+    scores <- scores * sign(res$log2FoldChange)
+    names(scores) <- res[,gene_identifier_type]
+    
+    #sort by log pval with names
+    scores <- sort(scores,decreasing = T)
+    
+    
+    #also get logFC vector; for INf, we will sort them by LFC...
+    logFC_vec <- res$log2FoldChange; names(logFC_vec) <- res[,gene_identifier_type]
+    
+    
+    # fix the underflow...
+    scores <- CVRCpipelines::fix_underflow(scores, logFC_vec, verbose = verbose)
+    
+    
+    
+    #make sure scores is in order of genes
+    scores <- scores[match(res[,gene_identifier_type], names(scores))]
+    
+    
+    #add to res
+    res$weight <- scores
+    
+    
+    
+  } else{
+    
+    if(verbose == T){
+      message('preweightcolumn "', preweightcolumn, '" detected, using this for ranking gene input to GSEA')
+    }
+    
+    res$weight <- res[,preweightcolumn]
+  }
   
   #order by weight
   res <- res[order(res$weight, decreasing = T),]
@@ -734,7 +790,7 @@ gseares_dotplot <- function(gseares,
   
   
   
-
+  
   
   #update 2025.03.31; do this before cutoff
   # #make sure order is by -log(padj) * NES# update; do this before filtering
@@ -1055,23 +1111,23 @@ gsea_to_aPEAR_clusters <- function(gseareslist,
     logfile <- paste0(outdir, '/logfile.txt')
     
     write_lines_l <- list(# date(),
-                          # paste0('fgsea version - ', packageVersion('fgsea')),
-                          paste0('aPEAR version - ', packageVersion('aPEAR')),
-                          
-                          paste0('\n'),
-                          
-                          paste0('aPEAR_cluster_min_size - ', aPEAR_cluster_min_size),
-                          paste0('min_pathway_gene_size - ', min_pathway_gene_size),
-                          paste0('num_input_sig_pathways_updn - ', num_input_sig_pathways_updn),
-                          
-                          paste0('\n\n\n'),
-                          
-                          paste0('Clusters and num pathways:'),
-                          paste( paste0(names(numpways), ' = ', numpways, ' pathways'), collapse='\n') 
-                          
-                          
-                          
-                          
+      # paste0('fgsea version - ', packageVersion('fgsea')),
+      paste0('aPEAR version - ', packageVersion('aPEAR')),
+      
+      paste0('\n'),
+      
+      paste0('aPEAR_cluster_min_size - ', aPEAR_cluster_min_size),
+      paste0('min_pathway_gene_size - ', min_pathway_gene_size),
+      paste0('num_input_sig_pathways_updn - ', num_input_sig_pathways_updn),
+      
+      paste0('\n\n\n'),
+      
+      paste0('Clusters and num pathways:'),
+      paste( paste0(names(numpways), ' = ', numpways, ' pathways'), collapse='\n') 
+      
+      
+      
+      
     )
     
     write('aPEAR log\n\n', logfile, append = T)

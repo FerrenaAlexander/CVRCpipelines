@@ -2,6 +2,11 @@
 
 For all changes, please update changelog and use Year-Month-Day
 
+## 0.2.2
+2025.08.28
+- add an optional parameter to `deseq_to_gsea()` function (which can also be passed to the whole pipeline `gsea_apear_pipeline()` function): `preweightcolumn` string, default is empty. Optionally, the user may provide a string denoting the column name of `deseqres` containing a pre-computed per-gene score to rank gene input to GSEA by, for example, "z.std" from the "dream" package (Hoffman Bioinformatics 2021)
+- check for and remove NAs in `deseqres$pvalue` and `deseqres$log2FoldChange` and pass a warning about this to users
+
 ## 0.2.1
 2025.08.19
 - add `quickpng()` function
