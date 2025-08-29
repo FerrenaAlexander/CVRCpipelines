@@ -256,7 +256,7 @@ deseq_to_gsea <- function(deseqres,
                           verbose = F,
                           pwaycats = c("HALLMARK", "GO_BP", "GO_MF", "GO_CC", "CP_REACTOME", "CP_KEGG", "TFT_GTRD", "TFT_TFT_Legacy"),
                           filename_prefix = '',
-                          preweightcolumn
+                          preweightcolumn=NULL
                           
 ){
   
@@ -321,17 +321,19 @@ deseq_to_gsea <- function(deseqres,
   
   
   #check colnames of deseq res input
-  important_colnames <- c(gene_identifier_type, 'log2FoldChange', 'pvalue')
-  
-  if(any(!(important_colnames %in% colnames(deseqres)))){
+  # UPDATE 2025.08.28: ADD PREWEIGHTCOLUMN: discard this check if preweightcolumn is passed
+  if(!is.null(preweightcolumn)){
+    important_colnames <- c(gene_identifier_type, 'log2FoldChange', 'pvalue')
     
-    missingimportant_colnames <- important_colnames[!(important_colnames %in% colnames(deseqres))]
-    
-    missingimportant_colnames <- paste(missingimportant_colnames, collapse = ', ')
-    
-    stop('column(s) "',missingimportant_colnames, '" are missing from the column names of deseqres.\nPlease make sure to format the input deseq2 res with the following:\n', paste(important_colnames, collapse = ', '))
-    
-  }
+    if(any(!(important_colnames %in% colnames(deseqres)))){
+      
+      missingimportant_colnames <- important_colnames[!(important_colnames %in% colnames(deseqres))]
+      
+      missingimportant_colnames <- paste(missingimportant_colnames, collapse = ', ')
+      
+      stop('column(s) "',missingimportant_colnames, '" are missing from the column names of deseqres.\nPlease make sure to format the input deseq2 res with the following:\n', paste(important_colnames, collapse = ', '))
+      
+    }}
   
   
   

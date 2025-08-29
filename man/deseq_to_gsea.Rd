@@ -16,7 +16,7 @@ deseq_to_gsea(
   pwaycats = c("HALLMARK", "GO_BP", "GO_MF", "GO_CC", "CP_REACTOME", "CP_KEGG",
     "TFT_GTRD", "TFT_TFT_Legacy"),
   filename_prefix = "",
-  preweightcolumn
+  preweightcolumn = NULL
 )
 }
 \arguments{
