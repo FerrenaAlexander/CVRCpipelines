@@ -440,6 +440,9 @@ deseq_to_gsea <- function(deseqres,
       stop('preweightcolumn was passed with value: "', preweightcolumn, '", but this is missing from colnames(deseqres)')
     }
     
+    
+    important_colnames <- c(gene_identifier_type, preweightcolumn)
+    
   }
   
   
