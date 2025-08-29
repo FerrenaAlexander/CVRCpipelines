@@ -322,7 +322,7 @@ deseq_to_gsea <- function(deseqres,
   
   #check colnames of deseq res input
   # UPDATE 2025.08.28: ADD PREWEIGHTCOLUMN: discard this check if preweightcolumn is passed
-  if(!is.null(preweightcolumn)){
+  if(is.null(preweightcolumn)){
     important_colnames <- c(gene_identifier_type, 'log2FoldChange', 'pvalue')
     
     if(any(!(important_colnames %in% colnames(deseqres)))){
@@ -333,7 +333,8 @@ deseq_to_gsea <- function(deseqres,
       
       stop('column(s) "',missingimportant_colnames, '" are missing from the column names of deseqres.\nPlease make sure to format the input deseq2 res with the following:\n', paste(important_colnames, collapse = ', '))
       
-    }}
+    }
+  }
   
   
   
